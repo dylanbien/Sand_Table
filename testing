@@ -47,7 +47,7 @@ def move_in_straight_line (self, sides):
     a = 0
     b = 1
     
-    for l in range (number_of_incriments):
+    for l in range(number_of_incriments):
         radius_change.append(radii[b] - radii[a])
         a += 1
         b += 1
