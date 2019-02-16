@@ -14,8 +14,6 @@ def pol2cart(rho, phi):
     return(x, y)
 
 def move_in_straight_line (self, sides):
-    
-    
 
     angle_change = 360 / sides
     incriments = 5.0
@@ -37,14 +35,14 @@ def move_in_straight_line (self, sides):
     
     angles = []
     radii = []
-    for i in range(starting_polar[1], ending_polar[1], incriments):
+    for i in range(starting_polar[1], ending_polar[1] + incriments , incriments):
         
         angles.append(i)
-        radii.append()
+        radii.append( y_intercept / (sin(i) - (slope * cos (i) ) ) )
         
-        print(angles)
-        print(radii)
-        
+    print(angles)
+    print(radii)
+    
     radius_change = []    
     a = 0
     b = 1
