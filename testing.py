@@ -17,11 +17,11 @@ def make_shape(sides, outward):
     number_of_increments = angle_change / increments #the number of x,y points used the move in straight line
     
     if outward:
-        r_change = 20000
+        r_change = 0
     else:
-        r_change = -20000
+        r_change = 0
 
-    for count in range (sides):
+    for count in range (0, sides):
         move_in_straight_line(motor.get_pos(), i * angle_change, r_change)
     
     
