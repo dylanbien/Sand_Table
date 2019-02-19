@@ -1,3 +1,12 @@
+#testing: To Do:
+#1) set speeds for both r and theta that you will keep
+#2) Find the speed (steps/second) for the theta
+#3) find the speed (steps/second) for the radius
+#4) find the relationship between velocity and radius's speed (steps per second). **this is more math for bottom of move in straight line function
+#5) identify time the motor has to make its increment and solve for velocity
+
+
+
 import numpy as np
 
 def cart2pol(x, y):
@@ -12,10 +21,22 @@ def pol2cart(rho, phi):
 
 def make_shape(sides, outward):
     
+    #theta information
+    period = 32 #seconds
+    steps_per_period = 300000 
+    theta_speed = steps_per_period / period
+    theta_speed_velocity_relationship = theta_speed / theta_motor.get_vel()
+    
+   
+    #angle informaton
     angle_change = 360 / sides #used in move in straight line call
     increments = 5.0 #angle change between each x,y point
     number_of_increments = angle_change / increments #the number of x,y points used the move in straight line
     
+    
+    #radius information
+    radius_time = (period / 360) * increments
+    radius_speed_velocity_relationship = 400 #work on
     if outward:
         r_change = 0
     else:
@@ -60,17 +81,11 @@ def move_in_straight_line (self, starting_r, starting_theta, r_change):
         a += 1
         b += 1
     print (radius_change)
- 
+
+
     velocities = []
-    
+
     for distance in radius_change:
-        velocities.append( distance / time_per_increment ). #work on time increment
-        
-        
-    #for l in range (number_of_increments):
-        #motor.set_velocities(velocities[l])
-        #motor.go_to_point(radii[l])
-        
-        
-        
+        speed = distance / radius_time #steps per second
+        velocities.append(speed * radius_speed_velocity_relationship  ) 
         
