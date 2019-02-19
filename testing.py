@@ -16,11 +16,11 @@ def pol2cart(rho, phi):
 def move_in_straight_line (self, sides):
 
     angle_change = 360 / sides
-    incriments = 5.0
-    number_of_incriments = angle_change / incriments
+    increments = 5.0
+    number_of_increments = angle_change / increments
     
     global degrees_per_second
-    time_per_incriment = degrees_per_second * incriment
+    time_per_increment = degrees_per_second * increment
 
     starting_polar = [5, 0]
     ending_polar = [ starting_polar[0], starting_polar[1] + angle_change ]
@@ -28,14 +28,14 @@ def move_in_straight_line (self, sides):
     starting_x, starting_y = pol2cart(starting_polar[0], starting_polar[1])
     ending_x, ending_y = pol2cart(ending_polar[0], ending_polar[1])
 
-    #use thse two points to make a line: y = mx + b
+    #use these two points to make a line: y = mx + b
     
     slope = (ending_y - starting_y) / (ending_x - starting_x) #m
     y_intercept = ending_y - (slope * ending_x) #b
     
     angles = []
     radii = []
-    for i in range(starting_polar[1], ending_polar[1] + incriments , incriments):
+    for i in range(starting_polar[1], ending_polar[1] + increments , increments):
         
         angles.append(i)
         radii.append( y_intercept / (sin(i) - (slope * cos (i) ) ) )
@@ -47,7 +47,7 @@ def move_in_straight_line (self, sides):
     a = 0
     b = 1
     
-    for l in range(number_of_incriments):
+    for l in range(number_of_increments):
         radius_change.append(radii[b] - radii[a])
         a += 1
         b += 1
@@ -57,10 +57,10 @@ def move_in_straight_line (self, sides):
     velocities = []
     
     for j in radius_change:
-        velocities.append( j / time_per_incriment )
+        velocities.append( j / time_per_increment )
         
         
-    #for l in range (number_of_incriments):
+    #for l in range (number_of_increments):
         #motor.set_velocities(velocities[l])
         #motor.go_to_point(radii[l])
         
