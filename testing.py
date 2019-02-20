@@ -1,11 +1,3 @@
-#testing: To Do:
-#1) set speeds for both r and theta that you will keep
-#2) Find the speed (steps/second) for the theta
-#3) find the speed (steps/second) for the radius
-#4) find the relationship between velocity and radius's speed (steps per second). **this is more math for bottom of move in straight line function
-#5) identify time the motor has to make its increment and solve for velocity
-
-
 
 import numpy as np
 
