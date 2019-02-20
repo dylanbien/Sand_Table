@@ -1,14 +1,18 @@
-
 import numpy as np
+import graph as g
 
 def cart2pol(x, y):
     rho = np.sqrt(x**2 + y**2)
     phi = np.arctan2(y, x)
+    print(rho)
+    print(phi)
     return(rho, phi)
 
 def pol2cart(rho, phi):
-    x = rho * np.cos(phi)
-    y = rho * np.sin(phi)
+    x = rho * np.cos(np.deg2rad(phi))
+    y = rho * np.sin(np.deg2rad(phi))
+    print(x)
+    print(y)
     return(x, y)
 
 def make_shape(sides, outward):
@@ -59,11 +63,13 @@ def move_in_straight_line (self, starting_r, starting_theta, r_change):
     for ang in range(starting_polar[1], ending_polar[1] + increments , increments):
         
         angles.append(ang)
-        radii.append( y_intercept / (sin(ang) - (slope * cos (ang) ) ) ) #note: may need to change angles from theta to radians?
+        radii.append( y_intercept / (np.sin(np.deg2rad(ang)) - (slope * np.cos(np.deg2rad(ang)) ) ) ) #note: may need to change angles from theta to radians?
         
     print(angles)
     print(radii)
-    
+
+    g.plotgraph(radii, np.rad2deg(angles))
+
     radius_change = []    
     a = 0
     b = 1
@@ -79,5 +85,5 @@ def move_in_straight_line (self, starting_r, starting_theta, r_change):
 
     for distance in radius_change:
         speed = distance / radius_time #steps per second
-        velocities.append(speed * radius_speed_velocity_relationship  ) 
+        velocities.append(speed * radius_speed_velocity_relationship)
         
