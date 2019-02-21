@@ -9,7 +9,7 @@ def plotgraph(r, theta):
 	#print(str(theta) + " , " + str(r))
     ax = plt.subplot(111, projection='polar')
     ax.set_rmax(200)
-    ax.plot(theta, r)
+    plt.polar(theta, r)
     print(theta)
     print(r)
     ax.set_rmax(210)
