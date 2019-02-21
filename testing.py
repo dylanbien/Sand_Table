@@ -1,5 +1,6 @@
 import numpy as np
 import graph as g
+import matplotlib.pyplot as plt
 
 angle_change = None
 increments = 5
@@ -46,8 +47,8 @@ def make_shape(sides, outward):
     else:
         r_change = 0
 
-    #for count in range (0, sides):
-    move_in_straight_line(200,0, r_change)
+    for count in range(0, sides):
+        move_in_straight_line(200,count * angle_change, r_change)
     
     
 def move_in_straight_line(starting_r, starting_theta, r_change):
@@ -75,10 +76,11 @@ def move_in_straight_line(starting_r, starting_theta, r_change):
         
         angles.append(ang)
         radii.append(int( y_intercept / (np.sin(np.deg2rad(ang)) - (slope * np.cos(np.deg2rad(ang)) ) ) )) #note: may need to change angles from theta to radians?
-        
+        plt.polar(angles[len(angles)-1]*(np.pi/180), radii[len(angles)-1],'k.')
+
     print(angles)
     print(radii)
-    g.plotgraph(radii, angles)
+
 
     radius_change = []    
     a = 0
@@ -98,5 +100,11 @@ def move_in_straight_line(starting_r, starting_theta, r_change):
         velocities.append(speed * radius_speed_velocity_relationship)
 
 
-
+ax = plt.subplot(111, projection='polar')
 make_shape(3, True)
+ax.set_rmax(210)
+ax.set_rticks([0.5, 1, 1.5, 2])  # less radial ticks
+ax.set_rlabel_position(-22.5)  # get radial labels away from plotted line
+ax.grid(True)
+ax.set_title("Simulated Pattern", va='bottom')
+plt.show()
