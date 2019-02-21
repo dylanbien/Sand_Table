@@ -1,12 +1,16 @@
 import numpy as np
-import graph as g
 import matplotlib.pyplot as plt
 
 angle_change = None
 increments = 5
 number_of_increments = None
-radius_time = 1
-radius_speed_velocity_relationship = 1
+
+
+# theta information
+period = 32  # seconds
+degrees_per_sec =  360.0 / period
+
+radius_time = degrees_per_sec * increments
 
 def cart2pol(x, y):
     rho = np.sqrt(x**2 + y**2)
@@ -26,29 +30,23 @@ def make_shape(sides, outward):
     global angle_change
     global increments
     global number_of_increments
-    #theta information
-    period = 32 #seconds
-    steps_per_period = 300000 
-    theta_speed = steps_per_period / period
-    #theta_speed_velocity_relationship = theta_speed / theta_motor.get_vel()
+
     
    
     #angle informaton
     angle_change = 360 / sides #used in move in straight line call
-
     number_of_increments = angle_change / increments #the number of x,y points used the move in straight line
     
     
     #radius information
     radius_time = (period / 360) * increments
-    radius_speed_velocity_relationship = 400 #work on
     if outward:
         r_change = 0
     else:
         r_change = 0
 
-    for count in range(0, sides):
-        move_in_straight_line(200,count * angle_change, r_change)
+    #for count in range(0, sides):
+    move_in_straight_line(200,0 * angle_change, r_change)
     
     
 def move_in_straight_line(starting_r, starting_theta, r_change):
@@ -96,9 +94,14 @@ def move_in_straight_line(starting_r, starting_theta, r_change):
     velocities = []
 
     for distance in radius_change:
-        speed = distance / radius_time #steps per second
-        velocities.append(speed * radius_speed_velocity_relationship)
+        velocities.append (distance / radius_time)
 
+    print(radii)
+    print(velocities)
+
+    for i in range(len(radii) -1 ): #1-25
+        print(radii[i + 1])
+        print(velocities[i])
 
 ax = plt.subplot(111, projection='polar')
 make_shape(3, True)
