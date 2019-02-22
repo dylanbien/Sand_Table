@@ -41,12 +41,15 @@ def make_shape(sides, outward):
     #radius information
     radius_time = (period / 360) * increments
     if outward:
-        r_change = 0
+        r_change = -15
     else:
-        r_change = 0
+        r_change = -15
 
-    #for count in range(0, sides):
-    move_in_straight_line(200,0 * angle_change, r_change)
+    start = 200
+
+    for count in range(0, sides):
+        start = start + r_change
+        move_in_straight_line(start, int(count * angle_change), r_change)
     
     
 def move_in_straight_line(starting_r, starting_theta, r_change):
@@ -100,8 +103,9 @@ def move_in_straight_line(starting_r, starting_theta, r_change):
     print(velocities)
 
     for i in range(len(radii) -1 ): #1-25
-        print(radii[i + 1])
-        print(velocities[i])
+        #print(radii[i + 1])
+        #print(velocities[i])
+        continue
 
 ax = plt.subplot(111, projection='polar')
 make_shape(3, True)
