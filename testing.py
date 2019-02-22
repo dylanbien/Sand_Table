@@ -41,15 +41,18 @@ def make_shape(sides, outward):
     #radius information
     radius_time = (period / 360) * increments
     if outward:
-        r_change = -15
+        r_change = -5
     else:
         r_change = -15
 
     start = 200
-
-    for count in range(0, sides):
-        start = start + r_change
-        move_in_straight_line(start, int(count * angle_change), r_change)
+    for i in range(30):
+        for count in range(0, sides):
+            start = start + r_change
+            if (start < 0):
+                print('start below zero')
+                return
+            move_in_straight_line(start, int(count * angle_change), r_change)
     
     
 def move_in_straight_line(starting_r, starting_theta, r_change):
@@ -108,7 +111,7 @@ def move_in_straight_line(starting_r, starting_theta, r_change):
         continue
 
 ax = plt.subplot(111, projection='polar')
-make_shape(3, True)
+make_shape(5, True)
 ax.set_rmax(210)
 ax.set_rticks([0.5, 1, 1.5, 2])  # less radial ticks
 ax.set_rlabel_position(-22.5)  # get radial labels away from plotted line
