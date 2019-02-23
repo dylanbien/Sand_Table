@@ -2,9 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-angle_change = None
 increments = 5
-number_of_increments = None
+
 
 
 # theta information
@@ -28,15 +27,13 @@ def pol2cart(rho, phi):
     return(x, y)
 
 def make_shape(sides, outward):
-    global angle_change
+    
     global increments
-    global number_of_increments
-
     
    
     #angle informaton
     angle_change = 360 / sides #used in move in straight line call
-    number_of_increments = angle_change / increments #the number of x,y points used the move in straight line
+    
     
     
     #radius information
@@ -53,11 +50,11 @@ def make_shape(sides, outward):
             if (start < 0):
                 print('start below zero')
                 return
-            move_in_straight_line(start, int(count * angle_change), r_change)
+            move_in_straight_line(start, int(count * angle_change), r_change, angle_change)
 
 
 def make_shape_spiral(sides, outward):
-    global angle_change
+    
     global increments
     global number_of_increments
 
@@ -79,13 +76,14 @@ def make_shape_spiral(sides, outward):
             if (start < 0):
                 print('start below zero')
                 return
-            move_in_straight_line(start, int(count * angle_change), r_change)
+            move_in_straight_line(start, int(count * angle_change), r_change, angle_change)
     
     
-def move_in_straight_line(starting_r, starting_theta, r_change):
+def move_in_straight_line(starting_r, starting_theta, r_change, angle_change):
     global increments 
-    global angle_change
-    global number_of_increments
+    
+    number_of_increments = angle_change / increments #the number of x,y points used the move in straight line
+    
     global radius_time
     global radius_speed_velocity_relationship
     #gets the starting and ending polar cordinates
