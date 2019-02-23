@@ -12,7 +12,12 @@ from RPi_ODrive import ODrive_Ease_Lib
 #//             Global Variables                      //
 #//////////////////////////////////////////////////////
 
-global increments
+#ODrive
+radius_SN = 2345654345
+theta_SN = 42534654756874563452
+
+#Straight Line
+increments = 5.0
 
 #///////////////////////////////////////////////////////
 #//               Motor Set-up                        //
