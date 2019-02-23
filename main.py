@@ -101,15 +101,11 @@ def make_shape(sides, outward, num_shape):
 def cart2pol(x, y):
     rho = np.sqrt(x**2 + y**2)
     phi = np.arctan2(y, x)
-    #print(rho)
-    #print(phi)
     return(rho, phi)
 
 def pol2cart(rho, phi):
     x = rho * np.cos(np.deg2rad(phi))
     y = rho * np.sin(np.deg2rad(phi))
-    #print(x)
-    #print(y)
     return(x, y)
 
 
