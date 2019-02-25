@@ -17,8 +17,8 @@ import matplotlib.pyplot as plt
 #//////////////////////////////////////////////////////
 
 #ODrive
-radius_SN = 2345654345
-theta_SN = 42534654756874563452
+radius_SN = 62161990005815
+theta_SN = 35601883739976
 
 #Straight Line
 increments = 5.0
@@ -32,38 +32,38 @@ radius_time = (360 / theta_period) * increments
 
 #Finds and names all the motors
 
-od1 = odrive.find_any("usb:001:036")
+od1 = odrive.find_any()
     if od1.serial_number == radius_SN:
         found = "radius"
         blue_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
-        orange_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis1)
-    elif od1.serial_number == theta_SN:
-        found = "theta"
-        theta_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
+        #orange_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis1)
+    #elif od1.serial_number == theta_SN:
+        #found = "theta"
+       # theta_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
     
-    
+'''
 od2 = odrive.find_any("usb:001:036")
     if found == "radius":
         theta_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis0) 
     else:
         blue_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis0)
         orange_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis1)
-        
+'''
 #Calibrates Motors
 blue_motor.calibrate()
-orange_motor.calibrate()       
-theta_motor.calibrate()
+#orange_motor.calibrate()
+#theta_motor.calibrate()
 
 #home/calibrate radii motors
 
 blue_motor.home_with_vel(20000)
-orange_motor.home_with_vel(20000)
+#orange_motor.home_with_vel(20000)
 
-blue_motor.home_with_vel(-20000)
-blue_motor.set_pos(-5000)
+#blue_motor.home_with_vel(-20000)
+#blue_motor.set_pos(-5000)
 
-orange_motor.home_with_vel(-20000)
-orange_motor.set_pos(-5000)
+#orange_motor.home_with_vel(-20000)
+#orange_motor.set_pos(-5000)
 
 #///////////////////////////////////////////////////////
 #//               Straight line Set-up                //
@@ -82,17 +82,12 @@ def make_shape(sides, outward, num_shape):
         r_change = -20
 
     starting_r = 200. #will be motor.get_pos()
-    
-    for i in range(num_shape): #number of times the shape is drawn
-        
-        for count in range(0, sides): #makes one shape
-            
-            starting_r = starting_r + r_change
-            if (start < 0):
-                print('start below zero')
-                return
-            move_in_straight_line(starting_r, int(count * angle_change), r_change, angle_change)
 
+    vel = move_in_straight_line(starting_r, int(count * angle_change), r_change, angle_change)
+
+    for velocities in vel:
+        blue_motor.set_vel(velocities)
+        sleep(radius_time)
 
 #///////////////////////////////////////////////////////
 #//                Straight line Math                 //
@@ -160,10 +155,7 @@ def move_in_straight_line(starting_r, starting_theta, r_change, angle_change):
     print(radii)
     print(velocities)
     
-    for i in range(len(radii) -1 ): #1-25
-        #print(radii[i + 1])
-        #print(velocities[i])
-        continue
+    return velocities
         
 #///////////////////////////////////////////////////////
 #//                   Graphing                        //
@@ -171,7 +163,7 @@ def move_in_straight_line(starting_r, starting_theta, r_change, angle_change):
 
 
 ax = plt.subplot(111, projection='polar')
-make_shape_spiral(6, True)
+make_shape(6, True, 1)
 ax.set_rmax(210)
 ax.set_rticks([0.5, 1, 1.5, 2])  # less radial ticks
 ax.set_rlabel_position(-22.5)  # get radial labels away from plotted line
