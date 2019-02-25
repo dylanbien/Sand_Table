@@ -3,9 +3,9 @@
 #//////////////////////////////////////////////////////
 
 import time
-
-#ODrive
+import sys
 import odrive
+sys.path.insert(0, "Users\SoftwareDevAdmin\Documents\RPi_ODrive")
 from RPi_ODrive import ODrive_Ease_Lib
 
 #straight line
@@ -33,21 +33,21 @@ radius_time = (360 / theta_period) * increments
 #Finds and names all the motors
 
 od1 = odrive.find_any("usb:001:036")
-    if od1.serial_number == radius_SN:
-        found = "radius"
-        blue_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
-        orange_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis1)
-    elif od1.serial_number == theta_SN:
-        found = "theta"
-        theta_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
+if od1.serial_number == radius_SN:
+    found = "radius"
+    blue_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
+    orange_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis1)
+elif od1.serial_number == theta_SN:
+    found = "theta"
+    theta_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
     
     
 od2 = odrive.find_any("usb:001:036")
-    if found == "radius":
-        theta_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis0) 
-    else:
-        blue_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis0)
-        orange_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis1)
+if found == "radius":
+    theta_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis0)
+else:
+    blue_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis0)
+    orange_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis1)
         
 #Calibrates Motors
 blue_motor.calibrate()
