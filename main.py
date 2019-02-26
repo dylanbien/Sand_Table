@@ -2,10 +2,8 @@
 #//                   Imports                        //
 #//////////////////////////////////////////////////////
 
-import time
-#import sys
+#import time
 import odrive
-#sys.path.insert(0, "Users\SoftwareDevAdmin\Documents\RPi_ODrive")
 from RPi_ODrive import ODrive_Ease_Lib
 
 #straight line
@@ -168,13 +166,22 @@ def move_in_straight_line(starting_r, starting_theta, r_change, angle_change):
 #//                   Graphing                        //
 #///////////////////////////////////////////////////////
 
+ax = plt.subplot(111, projection='polar')
+make_shape(6, True, 1)
+ax.set_rmax(210)
+ax.set_rticks([0.5, 1, 1.5, 2])  # less radial ticks
+ax.set_rlabel_position(-22.5)  # get radial labels away from plotted line
+ax.grid(True)
+ax.set_title("Simulated Pattern", va='bottom')
+plt.show()
+
 #///////////////////////////////////////////////////////
 #//                   placeholder                     //
 #///////////////////////////////////////////////////////
 outside_position = 216000
 inside_position = 5000
-swirl_velocity = 1000
 def swirl(swirl_design):
+    swirl_velocity = 1000
     if swirl_design == "out to in":
         blue_motor.set_pos(outside_position)
         orange_motor.set_pos(outside_position)
@@ -195,12 +202,3 @@ def swirl(swirl_design):
             orange_motor.set_vel(swirl_velocity)
     blue_motor.set_vel(0)
     orange_motor.set_vel(0)
-
-ax = plt.subplot(111, projection='polar')
-make_shape(6, True, 1)
-ax.set_rmax(210)
-ax.set_rticks([0.5, 1, 1.5, 2])  # less radial ticks
-ax.set_rlabel_position(-22.5)  # get radial labels away from plotted line
-ax.grid(True)
-ax.set_title("Simulated Pattern", va='bottom')
-plt.show()
