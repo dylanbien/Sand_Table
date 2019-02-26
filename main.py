@@ -181,7 +181,7 @@ def swirl(swirl_design):
         while blue_motor.get_pos() > inside_position:
             blue_motor.set_vel(-1*swirl_velocity)
             orange_motor.set_vel(-1*swirl_velocity)
-    elif swirl_design == "in to out"
+    elif swirl_design == "in to out":
         blue_motor.set_pos(inside_position)
         orange_motor.set_pos(inside_position)
         while blue_motor.get_pos() < outside_position:
