@@ -176,8 +176,9 @@ ax.set_title("Simulated Pattern", va='bottom')
 plt.show()
 
 #///////////////////////////////////////////////////////
-#//                   placeholder                     //
+#//                   Swirl Function                  //
 #///////////////////////////////////////////////////////
+
 outside_position = 216000
 inside_position = 5000
 def swirl(swirl_design):
