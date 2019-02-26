@@ -4,7 +4,7 @@
 
 import time
 import odrive
-import usb
+import usb.core
 #sys.path.insert(0, "Users\SoftwareDevAdmin\Documents\RPi_ODrive")
 from RPi_ODrive import ODrive_Ease_Lib
 
