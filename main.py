@@ -2,7 +2,7 @@
 #//                   Imports                        //
 #//////////////////////////////////////////////////////
 
-#import time
+import time
 import odrive
 import usb
 #sys.path.insert(0, "Users\SoftwareDevAdmin\Documents\RPi_ODrive")
@@ -26,7 +26,7 @@ theta_period = 20
 radius_time = (360 / theta_period) * increments
 
 #///////////////////////////////////////////////////////
-#//               Motor Set-up                        //
+#//               Motor Set-up                       //
 #//////////////////////////////////////////////////////
 
 dev = usb.core.find(find_all=1, idVendor=0x1209, idProduct=0x0d32)
@@ -39,41 +39,26 @@ try:
 except:
     pass
 print(len(od))
-#Finds and names all the motors
-'''
-od1 = odrive.find_any()
-    if od1.serial_number == radius_SN:
-        found = "radius"
-        blue_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
-        #orange_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis1)
-    #elif od1.serial_number == theta_SN:
-        #found = "theta"
-       # theta_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
-'''
-'''
-od2 = odrive.find_any("usb:001:036")
 
-if found == "radius":
-    theta_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis0)
-else:
-    blue_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis0)
-    orange_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis1)
-        
-    if found == "radius":
-        theta_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis0) 
-    else:
-        blue_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis0)
-        orange_motor = ODrive_Ease_Lib.ODrive_Axis(od2.axis1)
-'''
+for odrives in od:
+    print(odrives.serial_number)
+    if odrives.serial_number == radius_SN:
+        print ("connecting radius")
+        blue_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
+        orange_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis1)
+    elif odrives.serial_number == theta_SN:
+        print("connecting theta")
+        theta_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
+
+
 #Calibrates Motors
 blue_motor.calibrate()
-#orange_motor.calibrate()
-#theta_motor.calibrate()
+orange_motor.calibrate()
+theta_motor.calibrate()
 
-#home/calibrate radii motors
-
+#home radii motors
 blue_motor.home_with_vel(20000)
-#orange_motor.home_with_vel(20000)
+orange_motor.home_with_vel(20000)
 
 #blue_motor.home_with_vel(-20000)
 #blue_motor.set_pos(-5000)
@@ -103,7 +88,7 @@ def make_shape(sides, outward, num_shape):
 
     for velocities in vel:
         blue_motor.set_vel(velocities)
-        sleep(radius_time)
+        time.sleep(radius_time)
 
 #///////////////////////////////////////////////////////
 #//                Straight line Math                 //
