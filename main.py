@@ -3,9 +3,9 @@
 #//////////////////////////////////////////////////////
 
 import time
-import sys
+#import sys
 import odrive
-sys.path.insert(0, "Users\SoftwareDevAdmin\Documents\RPi_ODrive")
+#sys.path.insert(0, "Users\SoftwareDevAdmin\Documents\RPi_ODrive")
 from RPi_ODrive import ODrive_Ease_Lib
 
 #straight line
@@ -167,8 +167,35 @@ def move_in_straight_line(starting_r, starting_theta, r_change, angle_change):
         
 #///////////////////////////////////////////////////////
 #//                   Graphing                        //
-#//////////////////////////////////////////////////////
+#///////////////////////////////////////////////////////
 
+#///////////////////////////////////////////////////////
+#//                   placeholder                     //
+#///////////////////////////////////////////////////////
+outside_position = 216000
+inside_position = 5000
+swirl_velocity = 1000
+def swirl(swirl_design):
+    if swirl_design == "out to in":
+        blue_motor.set_pos(outside_position)
+        orange_motor.set_pos(outside_position)
+        while blue_motor.get_pos() > inside_position:
+            blue_motor.set_vel(-1*swirl_velocity)
+            orange_motor.set_vel(-1*swirl_velocity)
+    elif swirl_design == "in to out"
+        blue_motor.set_pos(inside_position)
+        orange_motor.set_pos(inside_position)
+        while blue_motor.get_pos() < outside_position:
+            blue_motor.set_vel(swirl_velocity)
+            orange_motor.set_vel(swirl_velocity)
+    else: # one starts in one starts out
+        blue_motor.set_pos(outside_position)
+        orange_motor.set_pos(inside_position)
+        while blue_motor.get_pos() > inside_position:
+            blue_motor.set_vel(-1*swirl_velocity)
+            orange_motor.set_vel(swirl_velocity)
+    blue_motor.set_vel(0)
+    orange_motor.set_vel(0)
 
 ax = plt.subplot(111, projection='polar')
 make_shape_spiral(6, True)
