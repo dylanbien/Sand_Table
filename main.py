@@ -5,6 +5,7 @@
 import time
 #import sys
 import odrive
+import usb
 #sys.path.insert(0, "Users\SoftwareDevAdmin\Documents\RPi_ODrive")
 from RPi_ODrive import ODrive_Ease_Lib
 
@@ -29,9 +30,18 @@ radius_time = (360 / theta_period) * increments
 #//               Motor Set-up                        //
 #//////////////////////////////////////////////////////
 
-
+dev = usb.core.find(find_all=1, idVendor=0x1209, idProduct=0x0d32)
+od = []
+try:
+    while True:
+         a = next(dev)
+         od.append(odrive.find_any('usb:%s:%s' % (a.bus, a.address)))
+    print('added')
+except:
+    pass
+print(len(od))
 #Finds and names all the motors
-
+'''
 od1 = odrive.find_any()
     if od1.serial_number == radius_SN:
         found = "radius"
@@ -40,7 +50,7 @@ od1 = odrive.find_any()
     #elif od1.serial_number == theta_SN:
         #found = "theta"
        # theta_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
-    
+'''
 '''
 od2 = odrive.find_any("usb:001:036")
 
