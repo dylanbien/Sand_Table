@@ -25,6 +25,39 @@ increments = 5.0
 theta_period = 20
 radius_time = (360 / theta_period) * increments
 
+outside_position = 216000
+inside_position = 5000
+
+#///////////////////////////////////////////////////////
+#//                    making a design                //
+#///////////////////////////////////////////////////////
+def make_a_design(design, starting_location, side = 0): #is sides right?????
+    
+    set_radius(starting_location)
+    #theta.set_vel(1200)???
+    
+    if design == "swirl":
+        #swirl(design)
+    if design == "shape"
+        print("shape"
+#///////////////////////////////////////////////////////
+#//               radius movement Function            //
+#///////////////////////////////////////////////////////
+
+def set_radius(movement):
+    global outside_position
+    global inside_position
+    print(movement)
+    if movement == "outward":
+        blue_motor.set_pos(outside_position)
+        orange_motor.set_pos(outside_position)
+    if movement == "inward":
+        blue_motor.set_pos(inside_position)
+        orange_motor.set_pos(inside_position)
+    if movement == "in and out":
+        blue_motor.set_pos(outside_position)
+        orange_motor.set_pos(inside_position)
+
 #///////////////////////////////////////////////////////
 #//               Motor Set-up                       //
 #//////////////////////////////////////////////////////
@@ -175,27 +208,24 @@ plt.show()
 #//                   Swirl Function                  //
 #///////////////////////////////////////////////////////
 
-outside_position = 216000
-inside_position = 5000
+
 def swirl(swirl_design):
     swirl_velocity = 1000
-    if swirl_design == "out to in":
-        blue_motor.set_pos(outside_position)
-        orange_motor.set_pos(outside_position)
+    if swirl_design == "out to in":  
         while blue_motor.get_pos() > inside_position:
             blue_motor.set_vel(-1*swirl_velocity)
             orange_motor.set_vel(-1*swirl_velocity)
+              
     elif swirl_design == "in to out":
-        blue_motor.set_pos(inside_position)
-        orange_motor.set_pos(inside_position)
         while blue_motor.get_pos() < outside_position:
             blue_motor.set_vel(swirl_velocity)
             orange_motor.set_vel(swirl_velocity)
+              
     else: # one starts in one starts out
-        blue_motor.set_pos(outside_position)
-        orange_motor.set_pos(inside_position)
+        set_radius("in and out")
         while blue_motor.get_pos() > inside_position:
             blue_motor.set_vel(-1*swirl_velocity)
             orange_motor.set_vel(swirl_velocity)
+              
     blue_motor.set_vel(0)
     orange_motor.set_vel(0)
