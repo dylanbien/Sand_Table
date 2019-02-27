@@ -229,3 +229,36 @@ def swirl(swirl_design):
               
     blue_motor.set_vel(0)
     orange_motor.set_vel(0)
+
+#///////////////////////////////////////////////////////
+#//                   Sinus oidal Function             //
+#///////////////////////////////////////////////////////
+
+def sinusoidal(direction):
+    #these numbers are subject to change after testing
+    starting = 180000
+    orange_motor.set_pos(starting)
+    blue_motor.set_pos(starting)
+
+    if direction == 'in':
+        shift = 10000
+        while shift >= 1:
+            orange_motor.set_pos(starting + shift)
+            blue_motor.set_pos(starting - shift)
+
+            orange_motor.set_pos(starting - shift)
+            blue_motor.set_pos(starting + shift)
+
+            shift /= 2
+    elif direction == 'out':
+        shift = 1
+        while shift <= 1000:
+            orange_motor.set_pos(starting + shift)
+            blue_motor.set_pos(starting - shift)
+
+            orange_motor.set_pos(starting - shift)
+            blue_motor.set_pos(starting + shift)
+
+            shift *= 2
+
+
