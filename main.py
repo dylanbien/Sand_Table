@@ -31,30 +31,30 @@ inside_position = 5000
 #///////////////////////////////////////////////////////
 #//                    making a design                //
 #///////////////////////////////////////////////////////
-def make_a_design(design, starting_location, side = 0): #is sides right?????
+def make_a_design(design, direction, side):
     
-    set_radius(starting_location)
+    set_radius(direction)
     #theta.set_vel(1200)???
     
     if design == "swirl":
-        #swirl(design)
-    if design == "shape"
-        print("shape"
+        swirl(direction)
+    if design == "shape":
+        make_shape(direction, side)
 #///////////////////////////////////////////////////////
 #//               radius movement Function            //
 #///////////////////////////////////////////////////////
 
-def set_radius(movement):
+def set_radius(direction):
     global outside_position
     global inside_position
-    print(movement)
-    if movement == "outward":
+    print(direction)
+    if direction == "inward":
         blue_motor.set_pos(outside_position)
         orange_motor.set_pos(outside_position)
-    if movement == "inward":
+    if direction == "outward":
         blue_motor.set_pos(inside_position)
         orange_motor.set_pos(inside_position)
-    if movement == "in and out":
+    if direction == "in and out":
         blue_motor.set_pos(outside_position)
         orange_motor.set_pos(inside_position)
 
@@ -100,32 +100,45 @@ orange_motor.home_with_vel(20000)
 #orange_motor.set_pos(-5000)
 
 #///////////////////////////////////////////////////////
-#//               Straight line Set-up                //
+#//                  Straight line                    //
 #//////////////////////////////////////////////////////
 
-def make_shape(sides, outward, num_shape):
+def make_shape(direction, sides):
     
     global increments
-   
+    global outside_position
+    global inside_position
+
     #angle informaton
     angle_change = 360 / sides #used in move in straight line call
 
-    if outward:
+    starting_r_blue = blue.get_pos()
+    starting_r_orange = orange.get_pos()
+
+    if direction == "outward":
         r_change = -20
-    else:
+        while (blue.get_pos() < outside_position):
+            for count in sides:
+
+                vel = move_in_straight_line(starting_r_blue, int(count * angle_change), r_change, angle_change)
+
+                for velocities in vel:
+                    blue_motor.set_vel(velocities)
+                    time.sleep(radius_time)
+            starting_r_blue = blue.get_pos()
+
+    elif direction == "inward":
         r_change = -20
+        while (blue.get_pos() > inside_position):
+            for count in sides:
 
-    starting_r = 200. #will be motor.get_pos()
+                vel = move_in_straight_line(starting_r_blue, int(count * angle_change), r_change, angle_change)
 
-    vel = move_in_straight_line(starting_r, int(count * angle_change), r_change, angle_change)
+                for velocities in vel:
+                    blue_motor.set_vel(velocities)
+                    time.sleep(radius_time)
 
-    for velocities in vel:
-        blue_motor.set_vel(velocities)
-        time.sleep(radius_time)
-
-#///////////////////////////////////////////////////////
-#//                Straight line Math                 //
-#//////////////////////////////////////////////////////
+            starting_r_blue = blue.get_pos()
 
 def cart2pol(x, y):
     rho = np.sqrt(x**2 + y**2)
@@ -190,7 +203,35 @@ def move_in_straight_line(starting_r, starting_theta, r_change, angle_change):
     print(velocities)
     
     return velocities
-        
+
+#///////////////////////////////////////////////////////
+#//                   Swirl Function                  //
+#///////////////////////////////////////////////////////
+
+
+def swirl(direction):
+    swirl_velocity = 1000
+    if direction == "inward":
+        blue_motor.set_vel(-1 * swirl_velocity)
+        orange_motor.set_vel(-1 * swirl_velocity)
+        while blue_motor.get_pos() > inside_position:
+            pass
+              
+    elif direction == "outward":
+        blue_motor.set_vel(swirl_velocity)
+        orange_motor.set_vel(swirl_velocity)
+        while blue_motor.get_pos() < outside_position:
+            pass
+              
+    else: # one starts in one starts out
+        blue_motor.set_vel(-1 * swirl_velocity)
+        orange_motor.set_vel(swirl_velocity)
+        while blue_motor.get_pos() > inside_position:
+            pass
+              
+    blue_motor.set_vel(0)
+    orange_motor.set_vel(0)
+
 #///////////////////////////////////////////////////////
 #//                   Graphing                        //
 #///////////////////////////////////////////////////////
@@ -203,29 +244,3 @@ ax.set_rlabel_position(-22.5)  # get radial labels away from plotted line
 ax.grid(True)
 ax.set_title("Simulated Pattern", va='bottom')
 plt.show()
-
-#///////////////////////////////////////////////////////
-#//                   Swirl Function                  //
-#///////////////////////////////////////////////////////
-
-
-def swirl(swirl_design):
-    swirl_velocity = 1000
-    if swirl_design == "out to in":  
-        while blue_motor.get_pos() > inside_position:
-            blue_motor.set_vel(-1*swirl_velocity)
-            orange_motor.set_vel(-1*swirl_velocity)
-              
-    elif swirl_design == "in to out":
-        while blue_motor.get_pos() < outside_position:
-            blue_motor.set_vel(swirl_velocity)
-            orange_motor.set_vel(swirl_velocity)
-              
-    else: # one starts in one starts out
-        set_radius("in and out")
-        while blue_motor.get_pos() > inside_position:
-            blue_motor.set_vel(-1*swirl_velocity)
-            orange_motor.set_vel(swirl_velocity)
-              
-    blue_motor.set_vel(0)
-    orange_motor.set_vel(0)
