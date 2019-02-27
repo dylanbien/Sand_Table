@@ -22,9 +22,10 @@ theta_SN = 35601883739976
 
 #Straight Line
 increments = 5.0
-theta_period = 20
-degrees_per_sec = (360 / theta_period)
-radius_time = (360 / theta_period) * increments
+theta_period = 20.0
+seconds_per_degree = (theta_period / 360)
+straight_line_radius_time = (seconds_per_degree) * increments
+
 
 outside_position = 216000
 inside_position = 5000
@@ -109,6 +110,7 @@ def make_shape(direction, sides):
     global increments
     global outside_position
     global inside_position
+    global straight_line_radius_time
 
     #angle informaton
     angle_change = 360 / sides #used in move in straight line call
@@ -125,7 +127,7 @@ def make_shape(direction, sides):
 
                 for velocities in vel:
                     blue_motor.set_vel(velocities)
-                    time.sleep(radius_time)
+                    time.sleep(straight_line_radius_time)
             starting_r_blue = blue.get_pos()
 
     elif direction == "inward":
@@ -137,7 +139,7 @@ def make_shape(direction, sides):
 
                 for velocities in vel:
                     blue_motor.set_vel(velocities)
-                    time.sleep(radius_time)
+                    time.sleep(straight_line_radius_time)
 
             starting_r_blue = blue.get_pos()
 
@@ -154,10 +156,11 @@ def pol2cart(rho, phi):
 
 def move_in_straight_line(starting_r, starting_theta, r_change, angle_change):
    
-    global increments  
+    global increments
+    global straight_line_radius_time
+
     number_of_increments = angle_change / increments #the number of x,y points used the move in straight line
-    
-    
+
     #gets the starting and ending polar cordinates
     starting_polar = [starting_r, starting_theta]
     ending_polar = [starting_polar[0] + r_change, starting_polar[1] + angle_change]
@@ -198,7 +201,7 @@ def move_in_straight_line(starting_r, starting_theta, r_change, angle_change):
     velocities = []
 
     for distance in radius_change:
-        velocities.append (distance / radius_time)
+        velocities.append (distance / straight_line_radius_time)
 
     print(radii)
     print(velocities)
@@ -273,6 +276,27 @@ def sinusoidal(direction,constant_shift=None):
             orange_motor.set_pos(starting - constant_shift)
             blue_motor.set_pos(starting + constant_shift)
 
+#///////////////////////////////////////////////////////
+#//                   Flower Function             //
+#///////////////////////////////////////////////////////
+
+def flower(direction, sides):
+
+    angle_change = 360 / sides
+    half_a_petal = angle_change / 2
+    half_a_petal_period = seconds_per_degree * half_a_petal
+
+    petal_height = 20
+
+    velocity = (blue_motor.get_pos + petal_height) / half_a_petal_period
+    while(blue_motor.get_pos() > inside_position):
+        for count in sides:
+            blue_motor.set_vel(velocity)
+            sleep(half_a_petal_period)
+            blue_motor.set_vel(-1*velocity)
+            sleep(half_a_petal_period)
+            blue_motor.set_vel(0)
+        blue_motor.set_pos(blue_motor.get_pos()+(petal_height / 2))
 
 
 
