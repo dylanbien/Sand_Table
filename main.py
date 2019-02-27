@@ -236,7 +236,7 @@ def swirl(direction):
 #//                   Sinusoidal Function             //
 #///////////////////////////////////////////////////////
 
-def sinusoidal(direction):
+def sinusoidal(direction,constant_shift=None):
     #these numbers are subject to change after testing
     starting = 180000
     orange_motor.set_pos(starting)
@@ -262,6 +262,17 @@ def sinusoidal(direction):
             blue_motor.set_pos(starting + shift)
 
             shift *= 2
+    elif direction == 'constant':
+
+        constant_shift = 1000
+        while True:
+            orange_motor.set_pos(starting + constant_shift)
+            blue_motor.set_pos(starting - constant_shift)
+
+            orange_motor.set_pos(starting - constant_shift)
+            blue_motor.set_pos(starting + constant_shift)
+
+
 
 
 #///////////////////////////////////////////////////////
