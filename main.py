@@ -23,6 +23,7 @@ theta_SN = 35601883739976
 #Straight Line
 increments = 5.0
 theta_period = 20
+degrees_per_sec = (360 / theta_period)
 radius_time = (360 / theta_period) * increments
 
 outside_position = 216000
