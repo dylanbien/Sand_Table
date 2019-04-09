@@ -17,8 +17,8 @@ import matplotlib.pyplot as plt
 #//////////////////////////////////////////////////////
 
 #ODrive
-radius_SN = 62161990005815
-theta_SN = 35601883739976
+radius_SN = 35601883739976
+theta_SN = 62161990005815
 
 #Straight Line
 increments = 5.0
