@@ -53,4 +53,4 @@ def transition_color(red_percent, green_percent, blue_percent):
             if (current_color[2] == next_color[2] ):
                 blue_done == True
 
-    transition_color(red_percent, green_percent, blue_percent)
+    set_color(red_percent, green_percent, blue_percent)
