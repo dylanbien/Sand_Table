@@ -23,8 +23,10 @@ for odrives in od:
     print(odrives.serial_number)
     if odrives.serial_number == radius_SN:
         print ("connecting radius")
-        blue_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
-        orange_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis1)
+        radius_odrive = odrives 
+        blue_motor = ODrive_Ease_Lib.ODrive_Axis(radius_odrive.axis0)
+        orange_motor = ODrive_Ease_Lib.ODrive_Axis(radius_odrive.axis1)
     elif odrives.serial_number == theta_SN:
+        theta_odrive = odrives
         print("connecting theta")
-        theta_motor = ODrive_Ease_Lib.ODrive_Axis(od1.axis0)
+        theta_motor = ODrive_Ease_Lib.ODrive_Axis(theta_odrive.axis0)
