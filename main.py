@@ -22,7 +22,7 @@ theta_SN = 62161990005815
 
 #Straight Line
 increments = 5.0
-theta_period = 20.0
+theta_period = 49.1
 seconds_per_degree = (theta_period / 360)
 straight_line_radius_time = (seconds_per_degree) * increments
 

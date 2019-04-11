@@ -1,54 +1,41 @@
-from time import sleep
-import odrive
-import usb.core
-
-from RPi_ODrive import ODrive_Ease_Lib
-
-#ODrive
-radius_SN = 35601883739976
-theta_SN = 62161990005815
-
-dev = usb.core.find(find_all=1, idVendor=0x1209, idProduct=0x0d32)
-od = []
-
-a = next(dev)
-od.append(odrive.find_any('usb:%s:%s' % (a.bus, a.address)))
-print('connected 1')
-a = next(dev)
-od.append(odrive.find_any('usb:%s:%s' % (a.bus, a.address)))
-print('connected 2')
-
-if od[0].serial_number == radius_SN:
-    radius_odrive = od[0]
-    theta_odrive = od[1]
-else:
-    radius_odrive = od[1]
-    theta_odrive = od[0]
-
-
-blue_motor = ODrive_Ease_Lib.ODrive_Axis(radius_odrive.axis0)
-orange_motor = ODrive_Ease_Lib.ODrive_Axis(radius_odrive.axis1)
-    
-theta_motor = ODrive_Ease_Lib.ODrive_Axis(theta_odrive.axis0)
-
-print('assigned axises')
-sleep(1)
-theta_motor.calibrate()
-print('theta calibrated')
-theta_motor.set_vel_limit(150000)
-#theta_motor.set_vel(150000)
-
-blue_motor.calibrate()
-blue_motor.home_with_vel(-20000)
-sleep(2)
-blue_motor.set_pos(-100000)
-
-
 #Straight Line
 increments = 5.0
 theta_period = 49.1
 seconds_per_degree = (theta_period / 360)
 straight_line_radius_time = (seconds_per_degree) * increments
+#import numpy as np
+#import matplotlib.pyplot as plt
+import odrive
+from RPi_ODrive import ODrive_Ease_Lib
+from time import sleep
+print ("connecting radius")
+radius_odrive = odrive.find_any() 
+blue_motor = ODrive_Ease_Lib.ODrive_Axis(radius_odrive.axis0)
+orange_motor = ODrive_Ease_Lib.ODrive_Axis(radius_odrive.axis1)
+
+blue_motor.calibrate()
+blue_motor.home_with_vel(-10000)
+sleep(2)
+blue_motor.set_pos(-100000)
+
+def make_shape():
+    
+    global increments
+    global outside_position
+    global inside_position
+    global straight_line_radius_time
+
+    #angle informaton
+    angle_change = 360 / sides #used in move in straight line call
+
+    starting_r_blue = -1 * blue_motor.get_pos()
+    
+    vel = move_in_straight_line(starting_r_blue, 0, 0, 120)
+
+    for velocities in vel:
+        blue_motor.set_vel(-1 * velocities)
+        sleep(straight_line_radius_time)
+                    
 
 def cart2pol(x, y):
     rho = np.sqrt(x**2 + y**2)
@@ -60,17 +47,7 @@ def pol2cart(rho, phi):
     y = rho * np.sin(np.deg2rad(phi))
     return(x, y)
 
-def spiral(dir):
-    if dir == 'out':
-        edge = -200000
-    else:
-        dir = -20000
-        
-        
-    while blue_motor.get_pos() > edge:
-        blue_motor.set_vel(-5000)
-    blue_motor.set_vel(0)
-    
+
 def move_in_straight_line(starting_r, starting_theta, r_change, angle_change):
    
     global increments
