@@ -3,6 +3,7 @@ import odrive
 import usb.core
 
 import ODrive_Ease_Lib
+import numpy as np
 
 class motot_setup:
     
@@ -12,7 +13,8 @@ class motot_setup:
     seconds_per_degree = (theta_period / 360)
     straight_line_radius_time = (seconds_per_degree) * increments
     
-    
+    outside_position = -200000
+    inside_position = -20000
     def __init__(self):
         
         #ODrive
@@ -51,9 +53,21 @@ class motot_setup:
         
         self.blue_motor.calibrate()
         
+#///////////////////////////////////////////////////////
+#//               radius movement Function            //
+#///////////////////////////////////////////////////////
 
-
+def set_radius(self,location):
     
+    print(location)
+    if location == "outside":
+        self.blue_motor.set_pos(self.outside_position)
+        self.orange_motor.set_pos(self.outside_position)
+    if location == "inside":
+        self.blue_motor.set_pos(self.inside_position)
+        self.orange_motor.set_pos(self.inside_position)
+    
+
 
     def cart2pol(self, x, y):
         rho = np.sqrt(x**2 + y**2)
@@ -65,17 +79,7 @@ class motot_setup:
         y = rho * np.sin(np.deg2rad(phi))
         return(x, y)
 
-    def spiral(self, dir):
-        if dir == 'out':
-            edge = -200000
-        else:
-            edge = -20000
-
-
-        while self.blue_motor.get_pos() > edge:
-            self.blue_motor.set_vel(-5000)
-        self.blue_motor.set_vel(0)
-
+    
     def move_in_straight_line(self, starting_r, starting_theta, r_change, angle_change):
 
         global increments
@@ -129,3 +133,14 @@ class motot_setup:
         print(velocities)
 
         return velocities
+
+    def spiral(self, dir):
+        if dir == 'out':
+            edge = -200000
+        else:
+            edge = -20000
+
+
+        while self.blue_motor.get_pos() > edge:
+            self.blue_motor.set_vel(-5000)
+        self.blue_motor.set_vel(0)
