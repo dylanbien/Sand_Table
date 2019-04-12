@@ -72,10 +72,10 @@ class Adafruit_Ease_Lib():
     function for servo movement
     '''
     def change_percentage(self, pin, percent):
-        if percent == 100:
+        if percent >= 100:
             self.set_high(pin)
             return
-        elif percent == 0:
+        elif percent <= 0:
             self.set_low(pin)
             return
         percentage = int(4095 - (percent/100)*4095)
