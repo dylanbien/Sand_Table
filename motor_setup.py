@@ -13,7 +13,7 @@ class motot_setup:
     straight_line_radius_time = (seconds_per_degree) * increments
     
     
-    def __init__():
+    def __init__(self):
         
         #ODrive
         radius_SN = 35601883739976
