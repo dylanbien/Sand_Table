@@ -16,8 +16,8 @@ class motot_setup:
     def __init__(self):
         
         #ODrive
-        radius_SN = 35601883739976
-        theta_SN = 62161990005815
+        self.radius_SN = 35601883739976
+        self.theta_SN = 62161990005815
 
         dev = usb.core.find(find_all=1, idVendor=0x1209, idProduct=0x0d32)
         od = []
@@ -30,17 +30,17 @@ class motot_setup:
         print('connected 2')
 
         if od[0].serial_number == radius_SN:
-            radius_odrive = od[0]
-            theta_odrive = od[1]
+            self.radius_odrive = od[0]
+            self.theta_odrive = od[1]
         else:
-            radius_odrive = od[1]
-            theta_odrive = od[0]
+            self.radius_odrive = od[1]
+            self.theta_odrive = od[0]
 
 
-        blue_motor = ODrive_Ease_Lib.ODrive_Axis(radius_odrive.axis0)
-        orange_motor = ODrive_Ease_Lib.ODrive_Axis(radius_odrive.axis1)
+        self.blue_motor = ODrive_Ease_Lib.ODrive_Axis(self.radius_odrive.axis0)
+        self.orange_motor = ODrive_Ease_Lib.ODrive_Axis(self.radius_odrive.axis1)
 
-        theta_motor = ODrive_Ease_Lib.ODrive_Axis(theta_odrive.axis0, 200000)
+        self.theta_motor = ODrive_Ease_Lib.ODrive_Axis(self.theta_odrive.axis0, 200000)
 
         print('assigned axises')
     
@@ -69,12 +69,12 @@ class motot_setup:
         if dir == 'out':
             edge = -200000
         else:
-            dir = -20000
+            edge = -20000
 
 
-        while blue_motor.get_pos() > edge:
-            blue_motor.set_vel(-5000)
-        blue_motor.set_vel(0)
+        while self.blue_motor.get_pos() > edge:
+            self.blue_motor.set_vel(-5000)
+        self.blue_motor.set_vel(0)
 
     def move_in_straight_line(self, starting_r, starting_theta, r_change, angle_change):
 
