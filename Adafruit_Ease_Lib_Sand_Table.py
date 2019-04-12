@@ -10,7 +10,11 @@ blue_port = 2
 current_color = [0, 0, 0]
 next_color = [0, 0, 0]
     
-    
+ color_options = 
+  [
+      [20,20,20],
+      [40,10,90]
+   ]
 class Adafruit_Ease_Lib():
 
     
@@ -151,6 +155,11 @@ class Adafruit_Ease_Lib():
                     print('blue done')
         self.set_color(red_percent, green_percent, blue_percent)
         
-#leds = Adafruit_Ease_Lib_Sand_Table.Adafruit_Ease_Lib() 
-leds = Adafruit_Ease_Lib() 
-leds.change_frequency(2000)
+    def run_lights(self):
+        global color_options
+        
+        #While True:
+            #pick a random
+            #Transition to random
+            #Sleep
+            
