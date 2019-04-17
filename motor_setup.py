@@ -3,9 +3,9 @@ import odrive
 import usb.core
 
 import ODrive_Ease_Lib
-import numpy as np
+#import numpy as np
 
-class motot_setup:
+class motor_setup:
     
     #Straight Line
     increments = 5.0
@@ -15,10 +15,11 @@ class motot_setup:
     
     outside_position = -200000
     inside_position = -20000
+    
     def __init__(self):
         
         #ODrive
-        self.radius_SN = 35601883739976
+        self.radius_SN = 62011668378679
         self.theta_SN = 62161990005815
 
         dev = usb.core.find(find_all=1, idVendor=0x1209, idProduct=0x0d32)
@@ -31,7 +32,7 @@ class motot_setup:
         od.append(odrive.find_any('usb:%s:%s' % (a.bus, a.address)))
         print('connected 2')
 
-        if od[0].serial_number == radius_SN:
+        if od[0].serial_number == self.radius_SN:
             self.radius_odrive = od[0]
             self.theta_odrive = od[1]
         else:
@@ -40,32 +41,48 @@ class motot_setup:
 
 
         self.blue_motor = ODrive_Ease_Lib.ODrive_Axis(self.radius_odrive.axis0)
-        self.orange_motor = ODrive_Ease_Lib.ODrive_Axis(self.radius_odrive.axis1)
+        #self.orange_motor = ODrive_Ease_Lib.ODrive_Axis(self.radius_odrive.axis1)
 
         self.theta_motor = ODrive_Ease_Lib.ODrive_Axis(self.theta_odrive.axis0, 200000)
 
         print('assigned axises')
     
-    def calibrate_motors(self):
+    def calibrate_theta(self):
         
         self.theta_motor.calibrate()
         print('theta calibrated')
         
+    def calibrate_radius(self):
+        
         self.blue_motor.calibrate()
+        print('radius calibrated') 
+#///////////////////////////////////////////////////////
+#//               theta movement Function            //
+#///////////////////////////////////////////////////////
+    def start_theta(self):
+        self.theta_motor.set_vel(50000)
+        sleep(2)
+        self.theta_motor.set_vel(100000)
+        sleep(2)
+        self.theta_motor.set_vel(150000)
+        print("theta moving")
+
+    def stop_theta(self):
+        self.theta_motor.set_vel(0)
         
 #///////////////////////////////////////////////////////
 #//               radius movement Function            //
 #///////////////////////////////////////////////////////
 
-def set_radius(self,location):
-    
-    print(location)
-    if location == "outside":
-        self.blue_motor.set_pos(self.outside_position)
-        self.orange_motor.set_pos(self.outside_position)
-    if location == "inside":
-        self.blue_motor.set_pos(self.inside_position)
-        self.orange_motor.set_pos(self.inside_position)
+    def set_radius(self,location):
+        
+        print(location)
+        if location == "outside":
+            self.blue_motor.set_pos(self.outside_position)
+            #self.orange_motor.set_pos(self.outside_position)
+        if location == "inside":
+            self.blue_motor.set_pos(self.inside_position)
+            #self.orange_motor.set_pos(self.inside_position)
     
 
 

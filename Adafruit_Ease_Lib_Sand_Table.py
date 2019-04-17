@@ -1,19 +1,23 @@
 #made by mangochildren
 import Adafruit_PCA9685
-
+import random
+from time import sleep 
 
 HIGH = 4096
 LOW = 0
-red_port = 0
+red_port = 8
 green_port = 1
 blue_port = 2
 current_color = [0, 0, 0]
 next_color = [0, 0, 0]
     
- color_options = 
-  [
-      [20,20,20],
-      [40,10,90]
+color_options = [
+      [10,40,20],
+      [10,40,0],
+      [20,0,60],
+      [80,10,0],
+      [60,0,20],
+      [60,50,20]
    ]
 class Adafruit_Ease_Lib():
 
@@ -157,9 +161,13 @@ class Adafruit_Ease_Lib():
         
     def run_lights(self):
         global color_options
-        
-        #While True:
-            #pick a random
-            #Transition to random
-            #Sleep
+        self.set_color(50,50,50)
+        sleep(2)
+        while True:
+            choice = random.randint(0,len(color_options)-1)
+            temp = color_options[choice]
+            self.transition_color(temp[0], temp[1], temp[2])
+            sleep(2)
+            print('done')
+           
             
