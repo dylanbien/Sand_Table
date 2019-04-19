@@ -1,4 +1,5 @@
 from time import sleep
+from time import time 
 import odrive
 import usb.core
 
@@ -49,7 +50,7 @@ class motor_setup:
     
     def calibrate_theta(self):
         
-        self.theta_motor.calibrate()
+        self.theta_motor.encoder_calibrate()
         print('theta calibrated')
         
     def calibrate_radius(self):
@@ -69,7 +70,32 @@ class motor_setup:
 
     def stop_theta(self):
         self.theta_motor.set_vel(0)
+        print('theta stopped')
+
+    def move_slowly(self, distance, seconds, dt = 0.004):
         
+        
+        velocity = distance / seconds
+        sleep(2)
+        piece_length = velocity * dt
+        num_pieces = int(distance / (piece_length) )
+        
+        mark = time()
+        
+        target_pos = self.blue_motor.get_pos()
+        
+        self.blue_motor.set_pos(target_pos)
+
+        for x in range (0, num_pieces):
+            self.blue_motor.set_pos_no_loop(target_pos)
+            target_pos += piece_length
+            
+            while time() < mark + dt:
+                pass
+            
+            mark = time()
+    
+    
 #///////////////////////////////////////////////////////
 #//               radius movement Function            //
 #///////////////////////////////////////////////////////

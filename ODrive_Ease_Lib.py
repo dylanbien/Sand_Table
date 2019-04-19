@@ -20,7 +20,14 @@ class ODrive_Axis(object):
             if time.time() - start > 15:
                 print("could not calibrate, try rebooting odrive")
                 return False
-
+    def encoder_calibrate(self):
+        self.axis.requested_state = AXIS_STATE_ENCODER_OFFSET_CALIBRATION
+        start = time.time()
+        while self.axis.current_state != AXIS_STATE_IDLE:
+            time.sleep(0.1)
+            if time.time() - start > 15:
+                print("could not calibrate, try rebooting odrive")
+                return False
 
     def is_calibrated(self):
         return self.axis.motor.is_calibrated
@@ -50,6 +57,14 @@ class ODrive_Axis(object):
         self.axis.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
         self.axis.controller.config.control_mode = CTRL_MODE_POSITION_CONTROL
         self.axis.controller.pos_setpoint = desired_pos
+        
+    def set_pos_no_loop(self, pos):
+        desired_pos = pos + self.zero
+        self.axis.controller.pos_setpoint = desired_pos
+        
+    def set_pos_ctrl_mode(self):
+        self.axis.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+        self.axis.controller.config.control_mode = CTRL_MODE_POSITION_CONTROL
 
     def set_pos_trap(self, pos):
         desired_pos = pos + self.zero
