@@ -12,11 +12,17 @@ class motor_setup:
     increments = 5.0
     theta_period = 49.1
     seconds_per_degree = (theta_period / 360)
-    straight_line_radius_time = (seconds_per_degree) * increments
+    straight_line_radius_time = (seconds_per_degree) * increments       
     
     outside_position = -200000
     inside_position = -20000
+
     
+#///////////////////////////////////////////////////////
+#//                    Initialization                 //
+#///////////////////////////////////////////////////////    
+
+   
     def __init__(self):
         
         #ODrive
@@ -47,7 +53,13 @@ class motor_setup:
         self.theta_motor = ODrive_Ease_Lib.ODrive_Axis(self.theta_odrive.axis0, 200000)
 
         print('assigned axises')
-    
+
+        
+#///////////////////////////////////////////////////////
+#//                     Calibration                  //
+#///////////////////////////////////////////////////////
+
+        
     def calibrate_theta(self):
         
         self.theta_motor.encoder_calibrate()
@@ -56,10 +68,14 @@ class motor_setup:
     def calibrate_radius(self):
         
         self.blue_motor.calibrate()
-        print('radius calibrated') 
+        print('radius calibrated')
+
+        
 #///////////////////////////////////////////////////////
-#//               theta movement Function            //
+#//                   theta movement                  //
 #///////////////////////////////////////////////////////
+
+        
     def start_theta(self):
         self.theta_motor.set_vel(50000)
         sleep(2)
@@ -72,28 +88,6 @@ class motor_setup:
         self.theta_motor.set_vel(0)
         print('theta stopped')
 
-    def move_slowly(self, distance, seconds, dt = 0.004):
-        
-        
-        velocity = distance / seconds
-        sleep(2)
-        piece_length = velocity * dt
-        num_pieces = int(distance / (piece_length) )
-        
-        mark = time()
-        
-        target_pos = self.blue_motor.get_pos()
-        
-        self.blue_motor.set_pos(target_pos)
-
-        for x in range (0, num_pieces):
-            self.blue_motor.set_pos_no_loop(target_pos)
-            target_pos += piece_length
-            
-            while time() < mark + dt:
-                pass
-            
-            mark = time()
     
     
 #///////////////////////////////////////////////////////
@@ -111,7 +105,73 @@ class motor_setup:
             #self.orange_motor.set_pos(self.inside_position)
     
 
+    def move_slowly(self, end_point, seconds, dt = 0.004):
+        
+        distance = end_point - self.blue_motor.get_pos()
+        velocity = distance / seconds
+        sleep(1)
+        piece_length = velocity * dt
+        num_pieces = int(distance / (piece_length) )
+        
+        mark = time()
+        
+        target_pos = self.blue_motor.get_pos()
+        
+        self.blue_motor.set_pos(target_pos)
 
+        for x in range (0, num_pieces):
+            self.blue_motor.set_pos_no_loop(target_pos)
+            target_pos += piece_length
+            
+            while time() < mark + dt:
+                pass
+            
+            mark = time()
+            
+#///////////////////////////////////////////////////////
+#//                        Swirl                      //
+#///////////////////////////////////////////////////////    
+    def spiral(self, dir):
+        print('dir: ' + str(dir))
+        if dir == 'out':
+            self.set_radius('inside')
+            print('radius set')
+            sleep(2)
+            self.move_slowly(self.outside_position, 70)
+            print('swirl completed')
+        else:
+            self.set_radius('outside')
+            print('radius set')
+            sleep(2)
+            self.move_slowly(self.inside_position, 70)
+            print('swirl completed')
+
+
+        while self.blue_motor.get_pos() > edge:
+            self.blue_motor.set_vel(-5000)
+        self.blue_motor.set_vel(0)
+
+#///////////////////////////////////////////////////////
+#//                     Shapes                        //
+#///////////////////////////////////////////////////////
+
+    def make_shape(self, dir, sides):
+        
+        #angle informaton
+        angle_change = 360 / sides #used in move in straight line call
+        starting_r_blue = -1 * blue.get_pos()
+        starting_theta = 0
+        r_change = 0
+
+        radius_change = self.straight_line_math(starting_r_blue, starting_theta, r_change, angle_change)
+
+        #check this before running on motor
+
+        
+        #for r in radius_change:
+            #self.move_slowly(-1 * r, self.straight_line_radius_time,)
+            
+        
     def cart2pol(self, x, y):
         rho = np.sqrt(x**2 + y**2)
         phi = np.arctan2(y, x)
@@ -123,7 +183,7 @@ class motor_setup:
         return(x, y)
 
     
-    def move_in_straight_line(self, starting_r, starting_theta, r_change, angle_change):
+    def straight_line_math(self, starting_r, starting_theta, r_change, angle_change):
 
         global increments
         global straight_line_radius_time
@@ -166,24 +226,15 @@ class motor_setup:
             b += 1
 
         print(radius_change)
+        
+        return radius_change
 
-        velocities = []
+    
+        #velocities = []
+        #for distance in radius_change:
+          #  velocities.append (distance / straight_line_radius_time)
+        #print(radii)
+        #print(velocities)
+        #return velocities
 
-        for distance in radius_change:
-            velocities.append (distance / straight_line_radius_time)
-
-        print(radii)
-        print(velocities)
-
-        return velocities
-
-    def spiral(self, dir):
-        if dir == 'out':
-            edge = -200000
-        else:
-            edge = -20000
-
-
-        while self.blue_motor.get_pos() > edge:
-            self.blue_motor.set_vel(-5000)
-        self.blue_motor.set_vel(0)
+    
