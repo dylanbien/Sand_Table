@@ -121,8 +121,8 @@ class Adafruit_Ease_Lib():
         global blue_port 
         next_color = [red_percent, green_percent, blue_percent]
         change = []
-        print(next_color)
-        print(current_color)
+        #print(next_color)
+        #print(current_color)
         for i in range (3):
             if (next_color[i] - current_color[i] > 0):
                 change.append(.1)
@@ -130,7 +130,7 @@ class Adafruit_Ease_Lib():
                 change.append(-.1)
             else:
                 change.append(0)
-        print(change)
+        #print(change)
         red_done = False
         green_done = False
         blue_done = False
@@ -142,21 +142,21 @@ class Adafruit_Ease_Lib():
                 self.change_percentage(red_port, current_color[0])
                 if (int(current_color[0]) == int(next_color[0])):
                     red_done =  True
-                    print('red done')
+                    #print('red done')
 
             if (green_done == False):
                 current_color[1] += change[1]
                 self.change_percentage(green_port, current_color[1])
                 if (int(current_color[1])== int(next_color[1] )):
                     green_done = True
-                    print('green done')
+                    #print('green done')
 
             if (blue_done == False):
                 current_color[2] += change[2]
                 self.change_percentage(blue_port, current_color[2])
                 if (int(current_color[2]) == int(next_color[2] )):
                     blue_done = True
-                    print('blue done')
+                    #print('blue done')
         self.set_color(red_percent, green_percent, blue_percent)
         
     def run_lights(self):
@@ -168,6 +168,6 @@ class Adafruit_Ease_Lib():
             temp = color_options[choice]
             self.transition_color(temp[0], temp[1], temp[2])
             sleep(2)
-            print('done')
+            #print('done')
            
             
