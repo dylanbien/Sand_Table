@@ -10,12 +10,12 @@ class motor_setup:
     
     #Straight Line
     increments = .1
-    theta_period = 49.1
+    theta_period = 36.74
     seconds_per_degree = (theta_period / 360)
     straight_line_radius_time = (seconds_per_degree) * increments       
     
     outside_position = -200000
-    inside_position = -20000
+    inside_position = -5000
 
     
 #///////////////////////////////////////////////////////
@@ -110,11 +110,9 @@ class motor_setup:
 
         
     def start_theta(self):
-        self.theta_motor.set_vel(50000)
+        self.theta_motor.set_vel(-100000)
         sleep(2)
-        self.theta_motor.set_vel(100000)
-        sleep(2)
-        self.theta_motor.set_vel(150000)
+        self.theta_motor.set_vel(-200000)
         print("theta moving")
 
     def stop_theta(self):
@@ -127,29 +125,50 @@ class motor_setup:
 #//               radius movement Function            //
 #///////////////////////////////////////////////////////
 
-    def set_radius(self,location):
+    def set_radius(self,location, two_motors=True):
         
-        print(location)
-        if location == "outside":
-            self.odin.set_pos(self.outside_position)
-            self.zeus.set_pos(self.outside_position)
-            
-            while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                pass
-            
-        if location == "inside":
-            self.odin.set_pos(self.inside_position)
-            self.zeus.set_pos(self.inside_position)
-            
-            while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                pass
+        if two_motors:
+            print(location)
+            if location == "outside":
+                self.odin.set_pos(self.outside_position)
+                self.zeus.set_pos(self.outside_position)
+                
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+                
+            if location == "inside":
+                self.odin.set_pos(self.inside_position)
+                self.zeus.set_pos(self.inside_position)
+                
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+        if two_motors == 'zeus':
+            print(location)
+            if location == "outside":
+                self.zeus.set_pos(self.outside_position)
+                while (self.zeus.is_busy() == True):
+                    pass
+            if location == "inside":
+                self.zeus.set_pos(self.inside_position)
+                while (self.zeus.is_busy() == True):
+                    pass
+        if two_motors == 'odin':
+            print(location)
+            if location == "outside":
+                self.odin.set_pos(self.outside_position)
+                while (self.odin.is_busy() == True):
+                    pass
+            if location == "inside":
+                self.odin.set_pos(self.inside_position)
+                while (self.odin.is_busy() == True):
+                    pass
 
     def move_slowly_vel(self, end_point, velocity, dt = 0.004):
         
         distance = end_point - self.odin.get_pos()
         seconds = int(distance / velocity)
         piece_length = velocity * dt
-        num_pieces = int(distance / (piece_length) )
+        num_pieces = abs(int(distance / (piece_length) ))
         
         mark = time()
         
@@ -178,9 +197,9 @@ class motor_setup:
             self.set_radius('inside')
             print('radius set')
             sleep(2)
-            self.move_slowly_vel(self.outside_position, 250)
+            self.move_slowly_vel(self.outside_position, -250)
             print('swirl completed')
-        else:
+        elif dir == 'in':
             self.set_radius('outside')
             print('radius set')
             sleep(2)
@@ -196,40 +215,60 @@ class motor_setup:
         
     def sinusoidal(self, starting,direction,constant_shift=None):
         #these numbers are subject to change after testing
-        #self.zeus.set_pos(starting)
+        self.zeus.set_pos(starting)
         self.odin.set_pos(starting)
+        while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
 
         if direction == 'in':
             shift = 10000
             while shift >= 1:
-                #self.zeus.set_pos(starting + shift)
+                self.zeus.set_pos(starting + shift)
                 self.odin.set_pos(starting - shift)
-                sleep(0.1)
-                #self.zeus.set_pos(starting - shift)
+                
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+                
+                self.zeus.set_pos(starting - shift)
                 self.odin.set_pos(starting + shift)
 
                 shift /= 2
+                
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
         elif direction == 'out':
             shift = 1
             while shift <= 1000:
-                #self.zeus.set_pos(starting + shift)
+                self.zeus.set_pos(starting + shift)
                 self.odin.set_pos(starting - shift)
-                sleep(0.1)
+                
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
 
-                #self.zeus.set_pos(starting - shift)
+                self.zeus.set_pos(starting - shift)
                 self.odin.set_pos(starting + shift)
 
                 shift *= 2
+                
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
         elif direction == 'constant':
 
-            constant_shift = 20000
-            while True:
-                #self.zeus.set_pos(starting + constant_shift)
+            constant_shift = 10000
+            t = time()
+            while time() <= (t+37) :
+                self.zeus.set_pos(starting + constant_shift)
                 self.odin.set_pos(starting - constant_shift)
-                sleep(1)
+                
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
 
-                #self.zeus.set_pos(starting - constant_shift)
+                self.zeus.set_pos(starting - constant_shift)
                 self.odin.set_pos(starting + constant_shift)
+                
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+
     
     def flower(self,direction, sides):
 
@@ -257,24 +296,30 @@ class motor_setup:
         
         #angle informaton
         angle_change = 360 / sides #used in move in straight line call
-        starting_r_blue = self.odin.get_pos()
+        starting_r = self.odin.get_pos()
         starting_theta = 0
         r_change = 0
+        i = 0
 
-        radii = self.straight_line_math(starting_r_blue, starting_theta, r_change, angle_change)
+        while(i<sides):
+                
+            radii = self.straight_line_math(starting_r, starting_theta, r_change, angle_change)
 
-        
-        mark = time()
-        self.odin.set_pos(radii[0])
-        
-        for r in radii:
-            self.odin.set_pos_no_loop(r)
             
-            print( time() - mark)
-            
-            while time() < mark + self.straight_line_radius_time:
-                pass
             mark = time()
+            self.odin.set_pos(radii[0])
+            
+            
+            
+            for r in radii:
+                self.odin.set_pos_no_loop(r)
+                
+                print( time() - mark)
+                
+                while time() < mark + self.straight_line_radius_time:
+                    pass
+                mark = time()
+            i += 1
             
             
         
