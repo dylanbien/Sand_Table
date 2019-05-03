@@ -127,41 +127,22 @@ class motor_setup:
 
     def set_radius(self,location, two_motors=True):
         
-        if two_motors:
-            print(location)
-            if location == "outside":
-                self.odin.set_pos(self.outside_position)
-                self.zeus.set_pos(self.outside_position)
+        
+        print(location)
+        if location == "outside":
+            self.odin.set_pos(self.outside_position)
+            self.zeus.set_pos(self.outside_position)
                 
-                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                    pass
+            while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                pass
                 
-            if location == "inside":
-                self.odin.set_pos(self.inside_position)
-                self.zeus.set_pos(self.inside_position)
+        if location == "inside":
+            self.odin.set_pos(self.inside_position)
+            self.zeus.set_pos(self.inside_position)
                 
-                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                    pass
-        if two_motors == 'zeus':
-            print(location)
-            if location == "outside":
-                self.zeus.set_pos(self.outside_position)
-                while (self.zeus.is_busy() == True):
-                    pass
-            if location == "inside":
-                self.zeus.set_pos(self.inside_position)
-                while (self.zeus.is_busy() == True):
-                    pass
-        if two_motors == 'odin':
-            print(location)
-            if location == "outside":
-                self.odin.set_pos(self.outside_position)
-                while (self.odin.is_busy() == True):
-                    pass
-            if location == "inside":
-                self.odin.set_pos(self.inside_position)
-                while (self.odin.is_busy() == True):
-                    pass
+            while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                pass
+        
 
     def move_slowly_vel(self, end_point, velocity, dt = 0.004):
         
@@ -221,7 +202,7 @@ class motor_setup:
                     pass
 
         if direction == 'in':
-            shift = 10000
+            shift = 30000
             while shift >= 1:
                 self.zeus.set_pos(starting + shift)
                 self.odin.set_pos(starting - shift)
@@ -232,13 +213,13 @@ class motor_setup:
                 self.zeus.set_pos(starting - shift)
                 self.odin.set_pos(starting + shift)
 
-                shift /= 2
+                shift /= 1.3
                 
                 while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
                     pass
         elif direction == 'out':
-            shift = 1
-            while shift <= 1000:
+            shift = 50
+            while shift <= 50000:
                 self.zeus.set_pos(starting + shift)
                 self.odin.set_pos(starting - shift)
                 
@@ -248,7 +229,7 @@ class motor_setup:
                 self.zeus.set_pos(starting - shift)
                 self.odin.set_pos(starting + shift)
 
-                shift *= 2
+                shift *= 1.3
                 
                 while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
                     pass
@@ -269,6 +250,12 @@ class motor_setup:
                 while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
                     pass
 
+    def cooler_sinusoidal(self,starting,direction):
+        self.sinusoidal(starting,direction)
+        self.sinusoidal(starting+20000,direction)
+        
+        
+    
     
     def flower(self,direction, sides):
 
@@ -296,30 +283,41 @@ class motor_setup:
         
         #angle informaton
         angle_change = 360 / sides #used in move in straight line call
-        starting_r = self.odin.get_pos()
+        
         starting_theta = 0
-        r_change = 0
-        i = 0
-
-        while(i<sides):
+        
+        if dir == 'outward':
+            self.set_radius('inside')
+            r_change = -5000
+        elif dir == 'inward':
+            self.set_radius('outside')
+            r_change = 5000
+        print('hi')
+        
+        while True:
+            i = 0
+            while(i<sides):
                 
-            radii = self.straight_line_math(starting_r, starting_theta, r_change, angle_change)
-
-            
-            mark = time()
-            self.odin.set_pos(radii[0])
-            
-            
-            
-            for r in radii:
-                self.odin.set_pos_no_loop(r)
+                starting_r = self.odin.get_pos()
                 
-                print( time() - mark)
+                radii = self.straight_line_math(starting_r, starting_theta, r_change, angle_change)
                 
-                while time() < mark + self.straight_line_radius_time:
-                    pass
+                for r in radii:
+                    if r > 0 or r < self.outside_position:
+                        print(str(r))
+                        return
                 mark = time()
-            i += 1
+                self.odin.set_pos(radii[0])
+                
+                for r in radii:
+                    self.odin.set_pos_no_loop(r)
+                    
+                    #print( time() - mark)
+                    
+                    while time() < mark + self.straight_line_radius_time:
+                        pass
+                    mark = time()
+                i += 1
             
             
         
