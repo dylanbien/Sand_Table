@@ -53,6 +53,17 @@ class motor_setup:
         self.theta_motor = ODrive_Ease_Lib.ODrive_Axis(self.theta_odrive.axis0, 200000)
 
         print('assigned axises')
+        
+    def prepare_table(self):
+      
+        self.calibrate_theta()
+        sleep(1)
+        self.start_theta()
+        sleep(1)
+        self.calibrate_radius()
+        sleep(1)
+        self.set_up_radius()
+        
 
     def reboot_odrive(self, odrive):
         if odrive = 'theta':
