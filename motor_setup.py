@@ -54,42 +54,35 @@ class motor_setup:
 
         print('assigned axises')
 
-    def set_increments(self, inc):
-        self.increments = inc
-        self.straight_line_radius_time = (self.seconds_per_degree) * self.increments
-        print('time: ' + str(self.straight_line_radius_time))
-    
-    def reboot_blue(self):
-        try:
-            self.odin.reboot()
-        except:
-            print('nope')
-    
-    def reboot_theta(self):
-        try:
-            self.theta_motor.reboot()
-        except:
-            print('nope')
-    
-        
+    def reboot_odrive(self, odrive):
+        if odrive = 'theta':
+            self.theta_odrive.reboot()
+        elif odrve = 'radius':
+            self.radius_odrive.reboot()
+        elif odrive = 'both':
+            self.theta_odrive.reboot()
+            self.radius_odrive.reboot()
+            
 #///////////////////////////////////////////////////////
 #//                     Calibration                  //
 #///////////////////////////////////////////////////////
 
         
     def calibrate_theta(self):
-        
+        print('calibrating theta')
         self.theta_motor.encoder_calibrate()
         self.theta_motor.set_curr_limit(13)
-        print('theta calibrated')
+        print('theta calibration completed')
         
     def calibrate_radius(self):
-        
+        print('calibrating radii')
         self.odin.encoder_calibrate()
         self.zeus.encoder_calibrate()
-        print('radius calibrated')
+        print('radii calibration completed')
         
     def set_up_radius(self):
+        
+        print('getting motors ready')
         
         self.odin.home_with_vel(-20000)
         self.odin.set_pos(-200000)
@@ -119,30 +112,36 @@ class motor_setup:
         self.theta_motor.set_vel(0)
         print('theta stopped')
 
-    
-    
 #///////////////////////////////////////////////////////
 #//               radius movement Function            //
 #///////////////////////////////////////////////////////
 
-    def set_radius(self,location, two_motors=True):
+    def set_radius(self, location, motors = 'both'):
         
-        
-        print(location)
-        if location == "outside":
-            self.odin.set_pos(self.outside_position)
-            self.zeus.set_pos(self.outside_position)
-                
-            while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                pass
-                
-        if location == "inside":
-            self.odin.set_pos(self.inside_position)
-            self.zeus.set_pos(self.inside_position)
-                
-            while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                pass
-        
+        print('motors: ' + motors)
+        print('location: ' + str(location))
+       
+        if two_motors = 'both':
+            if location == "outside":
+                self.odin.set_pos(self.outside_position)
+                self.zeus.set_pos(self.outside_position)
+
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+
+            if location == "inside":
+                self.odin.set_pos(self.inside_position)
+                self.zeus.set_pos(self.inside_position)
+
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+            if location == "opposite":
+                self.odin.set_pos(self.outside_position)
+                self.zeus.set_pos(self.inside_position)
+
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+
 
     def move_slowly_vel(self, end_point, velocity, dt = 0.004):
         
