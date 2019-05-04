@@ -9,11 +9,6 @@ from time import sleep
 #leds.run_lights()
 motors = motor_setup.motor_setup()
 sleep(1)
-print('calibrating theta')
-motors.calibrate_theta()
-sleep(1)
-motors.start_theta()
-sleep(2)
-motors.calibrate_radius()
-sleep(1)
-motors.set_up_radius()
+motors.prepare_table()
+
+
