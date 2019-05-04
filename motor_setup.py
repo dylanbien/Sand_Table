@@ -113,7 +113,7 @@ class motor_setup:
         print('theta stopped')
 
 #///////////////////////////////////////////////////////
-#//               radius movement Function            //
+#//               Setting the Radii             //
 #///////////////////////////////////////////////////////
 
     def set_radius(self, location, motors = 'both'):
@@ -129,20 +129,98 @@ class motor_setup:
                 while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
                     pass
 
-            if location == "inside":
+            elif location == "inside":
                 self.odin.set_pos(self.inside_position)
                 self.zeus.set_pos(self.inside_position)
 
                 while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
                     pass
-            if location == "opposite":
+                
+            elif location == "middle":
+                self.odin.set_pos((self.outside_position + self.inside_position)/2.0 )
+                self.zeus.set_pos((self.outside_position + self.inside_position)/2.0 )
+
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+                
+            elif location == "opposite":
                 self.odin.set_pos(self.outside_position)
                 self.zeus.set_pos(self.inside_position)
 
                 while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    
+                    pass
+            else:
+                
+                self.odin.set_pos(location)
+                self.zeus.set_pos(location)
+
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
                     pass
 
+    
+        else:
+            
+            if location == "outside":
+                
+                if motors = "odin":
+                    self.odin.set_pos(self.outside_position)
+                    while (self.odin.is_busy() = True):
+                           pass
+                elif motors = "zeus"
+                    self.zeus.set_pos(self.outside_position)
+                    while (self.zeus.is_busy() = True):
+                           pass
+                
+            elif location == "inside":
+                if motors = "odin":
+                    self.odin.set_pos(self.inside_position)
+                    while (self.odin.is_busy() = True):
+                           pass
+                elif motors = "zeus"
+                    self.zeus.set_pos(self.inside_position)
+                    while (self.zeus.is_busy() = True):
+                           pass
 
+            elif location == "middle":
+                if motors = "odin":
+                    self.odin.set_pos((self.outside_position + self.inside_position)/2.0 )
+                    while (self.odin.is_busy() = True):
+                        pass
+                elif motors = "zeus"           
+                    self.zeus.set_pos((self.outside_position + self.inside_position)/2.0 )
+                    while (self.zeus.is_busy() = True):
+                           pass
+
+            else:
+                if motors = "odin":
+                    self.odin.set_pos(location)
+                    while (self.odin.is_busy() = True):
+                        pass
+                elif motors = "zeus"  
+                    self.zeus.set_pos(location)
+                    while (self.zeus.is_busy() = True):
+                           pass
+               
+    
+#///////////////////////////////////////////////////////
+#//                        Swirl                      //
+#///////////////////////////////////////////////////////    
+    def spiral(self, dir):
+        print('dir: ' + str(dir))
+        if dir == 'out':
+            self.set_radius('inside')
+            print('radius set')
+            sleep(2)
+            self.move_slowly_vel(self.outside_position, -250)
+            print('swirl completed')
+        elif dir == 'in':
+            self.set_radius('outside')
+            print('radius set')
+            sleep(2)
+            self.move_slowly_vel(self.inside_position, 250)
+            print('swirl completed')
+            
     def move_slowly_vel(self, end_point, velocity, dt = 0.004):
         
         distance = end_point - self.odin.get_pos()
@@ -166,26 +244,6 @@ class motor_setup:
                 pass
             
             mark = time()
-            
-    
-#///////////////////////////////////////////////////////
-#//                        Swirl                      //
-#///////////////////////////////////////////////////////    
-    def spiral(self, dir):
-        print('dir: ' + str(dir))
-        if dir == 'out':
-            self.set_radius('inside')
-            print('radius set')
-            sleep(2)
-            self.move_slowly_vel(self.outside_position, -250)
-            print('swirl completed')
-        elif dir == 'in':
-            self.set_radius('outside')
-            print('radius set')
-            sleep(2)
-            self.move_slowly_vel(self.inside_position, 250)
-            print('swirl completed')
-
 
         
 #///////////////////////////////////////////////////////
@@ -253,7 +311,9 @@ class motor_setup:
         self.sinusoidal(starting,direction)
         self.sinusoidal(starting+20000,direction)
         
-        
+#///////////////////////////////////////////////////////
+#//                       Flower                      //
+#///////////////////////////////////////////////////////        
     
     
     def flower(self,direction, sides):
@@ -287,7 +347,7 @@ class motor_setup:
         
         if dir == 'outward':
             self.set_radius('inside')
-            r_change = -5000
+            r_change = -120005000
         elif dir == 'inward':
             self.set_radius('outside')
             r_change = 5000
