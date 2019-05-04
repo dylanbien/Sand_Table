@@ -1,0 +1,27 @@
+<sandTable>:
+    name: 'sandtable'
+    FloatLayout:
+        size_hint: None, None
+        
+
+         Label:
+            text: 'Conference Room Sand Table'
+            font_size: 175
+            size: root.width * 0.85, root.height * 0.95
+            x: root.width * 0.47
+            y: root.height * 0.85
+            
+            
+        Button:
+            size_hint: None,None
+            font_size: 55
+            size: root.width * 0.2, root.height * 0.1
+            x: root.width * 0.75
+            y: root.height * 0.1
+            text: 'Shape'
+            background_normal: ''
+            background_color: 0.6, 0.6, 1.0, 1.0
+            on_release: root.run('shape')
+            font_name: 'RobotoMono-Regular.ttf'
+
+       
