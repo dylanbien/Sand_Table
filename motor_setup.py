@@ -344,34 +344,60 @@ class motor_setup:
         angle_change = 360 / sides #used in move in straight line call
         
         starting_theta = 0
+        r_change_both = Null
         
         if dir == 'outward':
             self.set_radius('inside')
-            r_change = -120005000
+            r_change = -1 * (12000.0 / sides)
         elif dir == 'inward':
             self.set_radius('outside')
-            r_change = 5000
-        print('hi')
+            r_change = (12000.0 / sides)
+        elif dir = 'opposite':
+            self.set_radius('opposite')
+            r_change = (12000.0 / sides)
+            r_change_odin = -1 * (12000.0 / sides)
         
         while True:
+            
             i = 0
             while(i<sides):
                 
-                starting_r = self.odin.get_pos()
+                starting_r = self.zeus.get_pos()
+                
+                if r_change_both != Null:
+                    starting_r_both = self.odin.get_pos()
+                    radii_both = self.straight_line_math(starting_r_both, starting_theta, r_change_both, angle_change)
+                    
+                    for r in radii_both:
+                        if r > 0 or r < self.outside_position:
+                            print(str(r))
+                            return
+                    
                 
                 radii = self.straight_line_math(starting_r, starting_theta, r_change, angle_change)
-                
                 for r in radii:
                     if r > 0 or r < self.outside_position:
                         print(str(r))
                         return
-                mark = time()
-                self.odin.set_pos(radii[0])
-                
-                for r in radii:
-                    self.odin.set_pos_no_loop(r)
                     
-                    #print( time() - mark)
+                mark = time()
+                
+                self.zeus.set_pos(radii[0])
+                
+                if r_change_both != Null:
+                    self.odin.set_pos(radii_both[0])
+                else:
+                    self.odin.set_pos(radii[0])
+                
+                for r in len(radii):
+                    
+                    self.zeus.set_pos_no_loop(radii[r])
+                    
+                    if r_change_both != Null:
+                        self.odin.set_pos_no_loop(radii_both[r])
+                    else:
+                        self.odin.set_pos_no_loop(radii[r])
+                        
                     
                     while time() < mark + self.straight_line_radius_time:
                         pass
