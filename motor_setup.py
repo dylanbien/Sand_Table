@@ -132,7 +132,7 @@ class motor_setup:
         print('motors: ' + motors)
         print('location: ' + str(location))
        
-        if two_motors = 'both':
+        if motors = 'both':
             if location == "outside":
                 self.odin.set_pos(self.outside_position)
                 self.zeus.set_pos(self.outside_position)
