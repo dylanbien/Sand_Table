@@ -63,16 +63,8 @@ class motor_setup:
         self.calibrate_radius()
         sleep(1)
         self.set_up_radius()
-        
-
-    def reboot_odrive(self, odrive):
-        if odrive = 'theta':
-            self.theta_odrive.reboot()
-        elif odrve = 'radius':
-            self.radius_odrive.reboot()
-        elif odrive = 'both':
-            self.theta_odrive.reboot()
-            self.radius_odrive.reboot()
+       
+    
             
 #///////////////////////////////////////////////////////
 #//                     Calibration                  //
@@ -131,8 +123,8 @@ class motor_setup:
         
         print('motors: ' + motors)
         print('location: ' + str(location))
-       
-        if motors = 'both':
+        
+        if motors == 'both':
             if location == "outside":
                 self.odin.set_pos(self.outside_position)
                 self.zeus.set_pos(self.outside_position)
@@ -174,43 +166,43 @@ class motor_setup:
             
             if location == "outside":
                 
-                if motors = "odin":
+                if motors == "odin":
                     self.odin.set_pos(self.outside_position)
-                    while (self.odin.is_busy() = True):
+                    while (self.odin.is_busy() == True):
                            pass
-                elif motors = "zeus"
+                elif motors == "zeus":
                     self.zeus.set_pos(self.outside_position)
-                    while (self.zeus.is_busy() = True):
+                    while (self.zeus.is_busy() == True):
                            pass
                 
             elif location == "inside":
-                if motors = "odin":
+                if motors == "odin":
                     self.odin.set_pos(self.inside_position)
-                    while (self.odin.is_busy() = True):
+                    while (self.odin.is_busy() == True):
                            pass
-                elif motors = "zeus"
+                elif motors == "zeus":
                     self.zeus.set_pos(self.inside_position)
-                    while (self.zeus.is_busy() = True):
+                    while (self.zeus.is_busy() == True):
                            pass
 
             elif location == "middle":
-                if motors = "odin":
+                if motors == "odin":
                     self.odin.set_pos((self.outside_position + self.inside_position)/2.0 )
-                    while (self.odin.is_busy() = True):
+                    while (self.odin.is_busy() == True):
                         pass
-                elif motors = "zeus"           
+                elif motors == "zeus":          
                     self.zeus.set_pos((self.outside_position + self.inside_position)/2.0 )
-                    while (self.zeus.is_busy() = True):
+                    while (self.zeus.is_busy() == True):
                            pass
 
             else:
-                if motors = "odin":
+                if motors == "odin":
                     self.odin.set_pos(location)
-                    while (self.odin.is_busy() = True):
+                    while (self.odin.is_busy() == True):
                         pass
-                elif motors = "zeus"  
+                elif motors == "zeus":
                     self.zeus.set_pos(location)
-                    while (self.zeus.is_busy() = True):
+                    while (self.zeus.is_busy() == True):
                            pass
                
     
@@ -355,7 +347,7 @@ class motor_setup:
         angle_change = 360 / sides #used in move in straight line call
         
         starting_theta = 0
-        r_change_both = Null
+        r_change_both = None
         
         if dir == 'outward':
             self.set_radius('inside')
@@ -363,19 +355,21 @@ class motor_setup:
         elif dir == 'inward':
             self.set_radius('outside')
             r_change = (12000.0 / sides)
-        elif dir = 'opposite':
+        elif dir == 'opposite':
             self.set_radius('opposite')
-            r_change = (12000.0 / sides)
-            r_change_odin = -1 * (12000.0 / sides)
+            r_change = -1 * (12000.0 / sides)
+            r_change_both = (12000.0 / sides)
         
         while True:
             
             i = 0
             while(i<sides):
                 
+                mark = time()
+                
                 starting_r = self.zeus.get_pos()
                 
-                if r_change_both != Null:
+                if r_change_both != None:
                     starting_r_both = self.odin.get_pos()
                     radii_both = self.straight_line_math(starting_r_both, starting_theta, r_change_both, angle_change)
                     
@@ -391,20 +385,20 @@ class motor_setup:
                         print(str(r))
                         return
                     
-                mark = time()
+                
                 
                 self.zeus.set_pos(radii[0])
                 
-                if r_change_both != Null:
+                if r_change_both != None:
                     self.odin.set_pos(radii_both[0])
                 else:
                     self.odin.set_pos(radii[0])
                 
-                for r in len(radii):
+                for r in range(len(radii)):
                     
                     self.zeus.set_pos_no_loop(radii[r])
                     
-                    if r_change_both != Null:
+                    if r_change_both != None:
                         self.odin.set_pos_no_loop(radii_both[r])
                     else:
                         self.odin.set_pos_no_loop(radii[r])
