@@ -64,7 +64,9 @@ class motor_setup:
         sleep(1)
         self.set_up_radius()
        
-    
+    def set_inc(self,inc):
+        self.increments = .1
+        self.straight_line_radius_time = (slef.seconds_per_degree) * self.increments
             
 #///////////////////////////////////////////////////////
 #//                     Calibration                  //
@@ -341,75 +343,105 @@ class motor_setup:
 #//                     Shapes                        //
 #///////////////////////////////////////////////////////
 
-    def make_shape(self, dir, sides):
+    def make_shape_same(self, dir, sides, both = True):
         
         #angle informaton
         angle_change = 360 / sides #used in move in straight line call
         
         starting_theta = 0
-        r_change_both = None
-        
+
         if dir == 'outward':
             self.set_radius('inside')
-            r_change = -1 * (12000.0 / sides)
+             r_change = -1 * (12000.0 / sides)
         elif dir == 'inward':
             self.set_radius('outside')
             r_change = (12000.0 / sides)
-        elif dir == 'opposite':
-            self.set_radius('opposite')
-            r_change = -1 * (12000.0 / sides)
-            r_change_both = (12000.0 / sides)
+
+        while True:
+            
+            i = 0
+            while(i<sides):
+                
+                mark = time()  #Where should this be???
+                
+                starting_r = self.zeus.get_pos()
+
+                 radii = self.straight_line_math(starting_r, starting_theta, r_change, angle_change)
+
+                 for r in radii:  #This may be taking a lot of time...so look into
+                    if r > 0 or r < self.outside_position:
+                        print(str(r))
+                        return
+
+                self.zeus.set_pos(radii[0])
+                if both == True:
+                    self.odin.set_pos(radii[0])
+
+                 for r in radii:
+                     
+                     self.zeus.set_pos_no_loop(r)
+                     if both == True:
+                         self.odin.set_pos_no_loop(r)
+
+ 
+                    while time() < mark + self.straight_line_radius_time:
+                        pass
+
+                    #while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                        #pass
+                    
+                    mark = time()
+                i += 1
+                
+
+    def make_shape_opposite(self, sides):
+        
+        #angle informaton
+        angle_change = 360 / sides #used in move in straight line call
+        
+        starting_theta = 0
+        self.set_radius('opposite')
+        r_change_1 = -1 * (12000.0 / sides)
+        r_change_2 = (12000.0 / sides)
         
         while True:
             
             i = 0
             while(i<sides):
                 
-                mark = time()
+                mark = time()  #Where should this be???
                 
-                starting_r = self.zeus.get_pos()
+                starting_r_1 = self.zeus.get_pos()
+                starting_r_2 = self.odin.get_pos()
                 
-                if r_change_both != None:
-                    starting_r_both = self.odin.get_pos()
-                    radii_both = self.straight_line_math(starting_r_both, starting_theta, r_change_both, angle_change)
-                    
-                    for r in radii_both:
-                        if r > 0 or r < self.outside_position:
-                            print(str(r))
-                            return
-                    
-                
-                radii = self.straight_line_math(starting_r, starting_theta, r_change, angle_change)
-                for r in radii:
+
+                 radii_1 = self.straight_line_math(starting_r_1, starting_theta, r_change_1, angle_change)
+                 radii_2 = self.straight_line_math(starting_r_2, starting_theta, r_change_2, angle_change)
+
+                 for r in radii_1:  #This may be taking a lot of time...so look into
                     if r > 0 or r < self.outside_position:
                         print(str(r))
                         return
                     
-                
-                
-                self.zeus.set_pos(radii[0])
-                
-                if r_change_both != None:
-                    self.odin.set_pos(radii_both[0])
-                else:
-                    self.odin.set_pos(radii[0])
-                
-                for r in range(len(radii)):
-                    
-                    self.zeus.set_pos_no_loop(radii[r])
-                    
-                    if r_change_both != None:
-                        self.odin.set_pos_no_loop(radii_both[r])
-                    else:
-                        self.odin.set_pos_no_loop(radii[r])
-                        
-                    
+                 for r in radii_2:  #This may be taking a lot of time...so look into
+                    if r > 0 or r < self.outside_position:
+                        print(str(r))
+                        return
+
+                self.zeus.set_pos(radii_1[0])
+                self.odin.set_pos(radii_2[0])
+
+                 for r in range(len(radii_1)):
+                     self.zeus.set_pos_no_loop(radii_1[r])
+                     self.odin.set_pos_no_loop(raddi_2[r])
+
+ 
                     while time() < mark + self.straight_line_radius_time:
                         pass
+                    
                     mark = time()
                 i += 1
-            
-            
+                
         
     def cart2pol(self, x, y):
         rho = np.sqrt(x**2 + y**2)
@@ -423,8 +455,6 @@ class motor_setup:
 
     
     def straight_line_math(self, starting_r, starting_theta, r_change, angle_change):
-
-        
 
         number_of_increments = angle_change / self.increments #the number of x,y points used the move in straight line
 
@@ -447,34 +477,10 @@ class motor_setup:
         for ang in np.arange(int(starting_polar[1]), int(ending_polar[1]+self.increments), self.increments):
 
             angles.append(ang)
-            radii.append(y_intercept / (np.sin(np.deg2rad(ang)) - (slope * np.cos(np.deg2rad(ang)) ) ) ) #note: may need to change angles from theta to radians?
+            radii.append(y_intercept / (np.sin(np.deg2rad(ang)) - (slope * np.cos(np.deg2rad(ang)) ) ) ) 
            
-        print(radii)
-        
-
-    
-        radius_change = []    
-        a = 0
-        b = 1
-
-        for i in range(len(radii) - 1):
-            radius_change.append(radii[b] - radii[a])
-            a += 1
-            b += 1
-
-        #print(radius_change)
-        
-        
-
-    
-        velocities = []
-        for distance in radius_change:
-            velocities.append (distance / self.straight_line_radius_time)
-        
-        print(velocities)
-        
-
-
+        #print(radii)
+            
         return radii
 
        

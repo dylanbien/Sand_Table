@@ -18,7 +18,10 @@
             size: root.width * 0.85, root.height * 0.95
             x: root.width * 0.47
             y: root.height * 0.85
-            
+        
+
+	#row 1
+    
         Button:
             size_hint: None,None
             font_size: 55
@@ -29,7 +32,7 @@
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('inward spiral')
-            font_name: 'RobotoMono-Regular.ttf'
+
         Button:
             size_hint: None,None
             font_size: 55
@@ -40,7 +43,6 @@
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('shape')
-            font_name: 'RobotoMono-Regular.ttf'
 
         Button:
             size_hint: None,None
@@ -48,11 +50,10 @@
             size: root.width * 0.15, root.height * 0.15
             x: root.width * 0.55
             y: root.height * 0.65
-            text: 'Inward\nTriangle'
+            text: 'Overlapping\nTriangle'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('shape')
-            font_name: 'RobotoMono-Regular.ttf'
 
         Button:
             size_hint: None,None
@@ -60,48 +61,46 @@
             size: root.width * 0.15, root.height * 0.15
             x: root.width * 0.75
             y: root.height * 0.65
-            text: 'Outward\nTriangle'
+            text: 'Overlapping\nPentagon'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('shape')
-            font_name: 'RobotoMono-Regular.ttf'
 
 
+	#row 2
 
         Button:
             size_hint: None,None
             font_size: 55
             size: root.width * 0.15, root.height * 0.15
             x: root.width * .15
+            y: root.height * 0.45
+            text: 'Inward\nTriangle'
+            background_normal: ''
+            background_color: 0.6, 0.6, 1.0, 1.0
+            on_release: root.run('shape')
+
+        Button:
+            size_hint: None,None
+            font_size: 55
+            size: root.width * 0.15, root.height * 0.15
+            x: root.width * 0.35
+            y: root.height * 0.45
+            text: 'Outward\nTriangle'
+            background_normal: ''
+            background_color: 0.6, 0.6, 1.0, 1.0
+            on_release: root.run('shape')
+
+        Button:
+            size_hint: None,None
+            font_size: 55
+            size: root.width * 0.15, root.height * 0.15
+            x: root.width * 0.55
             y: root.height * 0.45
             text: 'Inward\nSquare'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('shape')
-            font_name: 'RobotoMono-Regular.ttf'
-        Button:
-            size_hint: None,None
-            font_size: 55
-            size: root.width * 0.15, root.height * 0.15
-            x: root.width * 0.35
-            y: root.height * 0.45
-            text: 'Outward\nSquare'
-            background_normal: ''
-            background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
-            font_name: 'RobotoMono-Regular.ttf'
-
-        Button:
-            size_hint: None,None
-            font_size: 55
-            size: root.width * 0.15, root.height * 0.15
-            x: root.width * 0.55
-            y: root.height * 0.45
-            text: 'Inward\nSpiral'
-            background_normal: ''
-            background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
-            font_name: 'RobotoMono-Regular.ttf'
 
         Button:
             size_hint: None,None
@@ -109,14 +108,14 @@
             size: root.width * 0.15, root.height * 0.15
             x: root.width * 0.75
             y: root.height * 0.45
-            text: 'Inward\nSpiral'
+            text: 'Outward\nSquare'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('shape')
-            font_name: 'RobotoMono-Regular.ttf'
 
 
 
+	#row 3
 
         Button:
             size_hint: None,None
@@ -124,22 +123,22 @@
             size: root.width * 0.15, root.height * 0.15
             x: root.width * .15
             y: root.height * 0.25
-            text: 'Overlapping\nTriangles'
+            text: 'Outward\nHexagon'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('shape')
-            font_name: 'RobotoMono-Regular.ttf'
+
         Button:
             size_hint: None,None
             font_size: 40
             size: root.width * 0.15, root.height * 0.15
             x: root.width * 0.35
             y: root.height * 0.25
-            text: 'Overlapping\nPentagons'
+            text: 'Inward\nHexagon'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('shape')
-            font_name: 'RobotoMono-Regular.ttf'
+
 
         Button:
             size_hint: None,None
@@ -151,7 +150,6 @@
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('shape')
-            font_name: 'RobotoMono-Regular.ttf'
 
         Button:
             size_hint: None,None
@@ -163,6 +161,5 @@
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('shape')
-            font_name: 'RobotoMono-Regular.ttf'
 
 
