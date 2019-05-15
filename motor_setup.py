@@ -155,7 +155,6 @@ class motor_setup:
             
             target_pos += piece_length
             
-            print((mark + dt) - time())
             while time() < mark + dt:
                 pass
 
@@ -299,7 +298,9 @@ class motor_setup:
                      if both == True:
                          self.odin.set_pos_no_loop(r)
 
- 
+                                
+                    print((mark + straight_line_radius_time) - time())
+
                      while time() < mark + self.straight_line_radius_time:
                         pass
          
