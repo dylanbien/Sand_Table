@@ -86,6 +86,35 @@ class MainScreen(Screen):
 
     def reset_screen(self):
         sm.get_screen('mainscreen').ids.Status.text='Status: Ready'
+        
+    def disable_buttons(self):
+        self.ids.button1.disabled = True
+        self.ids.button2.disabled = True
+        self.ids.button3.disabled = True
+        self.ids.button4.disabled = True
+        self.ids.button5.disabled = True
+        self.ids.button6.disabled = True
+        self.ids.button7.disabled = True
+        self.ids.button8.disabled = True
+        self.ids.button9.disabled = True
+        self.ids.button10.disabled = True
+        self.ids.button11.disabled = True
+        self.ids.button12.disabled = True
+        
+    def enable_buttons(self):
+        self.ids.button1.disabled = False
+        self.ids.button2.disabled = False
+        self.ids.button3.disabled = False
+        self.ids.button4.disabled = False
+        self.ids.button5.disabled = False
+        self.ids.button6.disabled = False
+        self.ids.button7.disabled = False
+        self.ids.button8.disabled = False
+        self.ids.button9.disabled = False
+        self.ids.button10.disabled = False
+        self.ids.button11.disabled = False
+        self.ids.button12.disabled = False
+
     
 mainscreen = MainScreen(name = 'mainscreen')
 sm.add_widget(mainscreen)
