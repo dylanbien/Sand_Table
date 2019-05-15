@@ -108,8 +108,7 @@ class motor_setup:
 
         
     def start_theta(self):
-        self.theta_motor.set_vel(-100000)
-        sleep(2)
+        sleep(1)
         self.theta_motor.set_vel(-200000)
         print("theta moving")
 
@@ -117,96 +116,6 @@ class motor_setup:
         self.theta_motor.set_vel(0)
         print('theta stopped')
 
-#///////////////////////////////////////////////////////
-#//               Setting the Radii             //
-#///////////////////////////////////////////////////////
-
-    def set_radius(self, location, motors = 'both'):
-        
-        print('motors: ' + motors)
-        print('location: ' + str(location))
-        
-        if motors == 'both':
-            if location == "outside":
-                self.odin.set_pos(self.outside_position)
-                self.zeus.set_pos(self.outside_position)
-
-                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                    pass
-
-            elif location == "inside":
-                self.odin.set_pos(self.inside_position)
-                self.zeus.set_pos(self.inside_position)
-
-                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                    pass
-                
-            elif location == "middle":
-                self.odin.set_pos((self.outside_position + self.inside_position)/2.0 )
-                self.zeus.set_pos((self.outside_position + self.inside_position)/2.0 )
-
-                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                    pass
-                
-            elif location == "opposite":
-                self.odin.set_pos(self.outside_position)
-                self.zeus.set_pos(self.inside_position)
-
-                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                    
-                    pass
-            else:
-                
-                self.odin.set_pos(location)
-                self.zeus.set_pos(location)
-
-                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                    pass
-
-    
-        else:
-            
-            if location == "outside":
-                
-                if motors == "odin":
-                    self.odin.set_pos(self.outside_position)
-                    while (self.odin.is_busy() == True):
-                           pass
-                elif motors == "zeus":
-                    self.zeus.set_pos(self.outside_position)
-                    while (self.zeus.is_busy() == True):
-                           pass
-                
-            elif location == "inside":
-                if motors == "odin":
-                    self.odin.set_pos(self.inside_position)
-                    while (self.odin.is_busy() == True):
-                           pass
-                elif motors == "zeus":
-                    self.zeus.set_pos(self.inside_position)
-                    while (self.zeus.is_busy() == True):
-                           pass
-
-            elif location == "middle":
-                if motors == "odin":
-                    self.odin.set_pos((self.outside_position + self.inside_position)/2.0 )
-                    while (self.odin.is_busy() == True):
-                        pass
-                elif motors == "zeus":          
-                    self.zeus.set_pos((self.outside_position + self.inside_position)/2.0 )
-                    while (self.zeus.is_busy() == True):
-                           pass
-
-            else:
-                if motors == "odin":
-                    self.odin.set_pos(location)
-                    while (self.odin.is_busy() == True):
-                        pass
-                elif motors == "zeus":
-                    self.zeus.set_pos(location)
-                    while (self.zeus.is_busy() == True):
-                           pass
-               
     
 #///////////////////////////////////////////////////////
 #//                        Swirl                      //
@@ -216,13 +125,11 @@ class motor_setup:
         if dir == 'out':
             self.set_radius('inside')
             print('radius set')
-            sleep(2)
             self.move_slowly_vel(self.outside_position, -250)
             print('swirl completed')
         elif dir == 'in':
             self.set_radius('outside')
             print('radius set')
-            sleep(2)
             self.move_slowly_vel(self.inside_position, 250)
             print('swirl completed')
             
@@ -239,16 +146,19 @@ class motor_setup:
         
         self.odin.set_pos(target_pos)
         self.zeus.set_pos(target_pos)
+        
         mark = time()
+        
         for x in range (0, num_pieces):
             self.odin.set_pos_no_loop(target_pos)
             self.zeus.set_pos_no_loop(target_pos)
+            
             target_pos += piece_length
+            
             print((mark + dt) - time())
             while time() < mark + dt:
                 pass
 
-            
             mark = time()
 
         
@@ -372,7 +282,7 @@ class motor_setup:
 
                 radii = self.straight_line_math(starting_r, starting_theta, r_change, angle_change)
 
-                for r in radii:  #This may be taking a lot of time...so look into
+                for r in radii:
                     if r > 0 or r < self.outside_position:
                         print(str(r))
                         return
@@ -392,14 +302,15 @@ class motor_setup:
  
                      while time() < mark + self.straight_line_radius_time:
                         pass
-
-                    
+         
                     
                      mark = time()
                      
                
                 i += 1
                 
+            while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
 
     def make_shape_opposite(self, sides):
         
@@ -492,3 +403,91 @@ class motor_setup:
         return radii
 
        
+#///////////////////////////////////////////////////////
+#//               Setting the Radii             //
+#///////////////////////////////////////////////////////
+
+    def set_radius(self, location, motors = 'both'):
+        
+        print('motors: ' + motors + ', location: ' + str(location))
+        
+        if motors == 'both':
+            if location == "outside":
+                self.odin.set_pos(self.outside_position)
+                self.zeus.set_pos(self.outside_position)
+
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+
+            elif location == "inside":
+                self.odin.set_pos(self.inside_position)
+                self.zeus.set_pos(self.inside_position)
+
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+                
+            elif location == "middle":
+                self.odin.set_pos((self.outside_position + self.inside_position)/2.0 )
+                self.zeus.set_pos((self.outside_position + self.inside_position)/2.0 )
+
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+                
+            elif location == "opposite":
+                self.odin.set_pos(self.outside_position)
+                self.zeus.set_pos(self.inside_position)
+
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    
+                    pass
+            else:
+                
+                self.odin.set_pos(location)
+                self.zeus.set_pos(location)
+
+                while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
+
+    
+        else:
+            
+            if location == "outside":
+                
+                if motors == "odin":
+                    self.odin.set_pos(self.outside_position)
+                    while (self.odin.is_busy() == True):
+                           pass
+                elif motors == "zeus":
+                    self.zeus.set_pos(self.outside_position)
+                    while (self.zeus.is_busy() == True):
+                           pass
+                
+            elif location == "inside":
+                if motors == "odin":
+                    self.odin.set_pos(self.inside_position)
+                    while (self.odin.is_busy() == True):
+                           pass
+                elif motors == "zeus":
+                    self.zeus.set_pos(self.inside_position)
+                    while (self.zeus.is_busy() == True):
+                           pass
+
+            elif location == "middle":
+                if motors == "odin":
+                    self.odin.set_pos((self.outside_position + self.inside_position)/2.0 )
+                    while (self.odin.is_busy() == True):
+                        pass
+                elif motors == "zeus":          
+                    self.zeus.set_pos((self.outside_position + self.inside_position)/2.0 )
+                    while (self.zeus.is_busy() == True):
+                           pass
+
+            else:
+                if motors == "odin":
+                    self.odin.set_pos(location)
+                    while (self.odin.is_busy() == True):
+                        pass
+                elif motors == "zeus":
+                    self.zeus.set_pos(location)
+                    while (self.zeus.is_busy() == True):
+                           pass
