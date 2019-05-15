@@ -14,7 +14,7 @@ class motor_setup:
     seconds_per_degree = (theta_period / 360)
     straight_line_radius_time = (seconds_per_degree) * increments       
     
-    outside_position = -200000
+    outside_position = -190000
     inside_position = -5000
 
     
@@ -65,7 +65,7 @@ class motor_setup:
         self.set_up_radius()
        
     def set_inc(self,inc):
-        self.increments = .1
+        self.increments = inc
         self.straight_line_radius_time = (slef.seconds_per_degree) * self.increments
             
 #///////////////////////////////////////////////////////
@@ -89,13 +89,13 @@ class motor_setup:
         
         print('getting motors ready')
         
-        self.odin.home_with_vel(-20000)
-        self.odin.set_pos(-200000)
+        self.odin.home_with_vel(-25000)
+        self.odin.set_pos(-190000)
         while self.odin.is_busy() == True:
             pass
         
-        self.zeus.home_with_vel(-20000)
-        self.zeus.set_pos(-200000)
+        self.zeus.home_with_vel(-25000)
+        self.zeus.set_pos(-190000)
         while self.zeus.is_busy() == True:
             pass
         
@@ -226,27 +226,28 @@ class motor_setup:
             self.move_slowly_vel(self.inside_position, 250)
             print('swirl completed')
             
-    def move_slowly_vel(self, end_point, velocity, dt = 0.004):
+    def move_slowly_vel(self, end_point, velocity, dt = 0.01):
         
         distance = end_point - self.odin.get_pos()
         seconds = int(distance / velocity)
         piece_length = velocity * dt
         num_pieces = abs(int(distance / (piece_length) ))
         
-        mark = time()
+        
         
         target_pos = self.odin.get_pos()
         
         self.odin.set_pos(target_pos)
         self.zeus.set_pos(target_pos)
-
+        mark = time()
         for x in range (0, num_pieces):
             self.odin.set_pos_no_loop(target_pos)
             self.zeus.set_pos_no_loop(target_pos)
             target_pos += piece_length
-            
+            print((mark + dt) - time())
             while time() < mark + dt:
                 pass
+
             
             mark = time()
 
@@ -256,7 +257,7 @@ class motor_setup:
 #///////////////////////////////////////////////////////
         
         
-    def sinusoidal(self, starting,direction,constant_shift=None):
+    def sinusoidal(self, starting, direction, constant_shift=None):
         #these numbers are subject to change after testing
         self.zeus.set_pos(starting)
         self.odin.set_pos(starting)
@@ -321,8 +322,11 @@ class motor_setup:
 #///////////////////////////////////////////////////////        
     
     
-    def flower(self,direction, sides):
-
+    def flower(self, starting, sides):
+        self.zeus.set_pos(starting)
+        self.odin.set_pos(starting)
+        while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
+                    pass
         angle_change = 360 / sides
         half_a_petal = angle_change / 2
         half_a_petal_period = self.seconds_per_degree * half_a_petal
@@ -352,7 +356,7 @@ class motor_setup:
 
         if dir == 'outward':
             self.set_radius('inside')
-             r_change = -1 * (12000.0 / sides)
+            r_change = -1 * (12000.0 / sides)
         elif dir == 'inward':
             self.set_radius('outside')
             r_change = (12000.0 / sides)
@@ -362,13 +366,13 @@ class motor_setup:
             i = 0
             while(i<sides):
                 
-                mark = time()  #Where should this be???
+                  #Where should this be???
                 
                 starting_r = self.zeus.get_pos()
 
-                 radii = self.straight_line_math(starting_r, starting_theta, r_change, angle_change)
+                radii = self.straight_line_math(starting_r, starting_theta, r_change, angle_change)
 
-                 for r in radii:  #This may be taking a lot of time...so look into
+                for r in radii:  #This may be taking a lot of time...so look into
                     if r > 0 or r < self.outside_position:
                         print(str(r))
                         return
@@ -376,21 +380,24 @@ class motor_setup:
                 self.zeus.set_pos(radii[0])
                 if both == True:
                     self.odin.set_pos(radii[0])
-
-                 for r in radii:
+                    
+                mark = time()
+                
+                for r in radii:
                      
                      self.zeus.set_pos_no_loop(r)
                      if both == True:
                          self.odin.set_pos_no_loop(r)
 
  
-                    while time() < mark + self.straight_line_radius_time:
+                     while time() < mark + self.straight_line_radius_time:
                         pass
 
-                    #while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                        #pass
                     
-                    mark = time()
+                    
+                     mark = time()
+                     
+               
                 i += 1
                 
 
@@ -415,15 +422,15 @@ class motor_setup:
                 starting_r_2 = self.odin.get_pos()
                 
 
-                 radii_1 = self.straight_line_math(starting_r_1, starting_theta, r_change_1, angle_change)
-                 radii_2 = self.straight_line_math(starting_r_2, starting_theta, r_change_2, angle_change)
+                radii_1 = self.straight_line_math(starting_r_1, starting_theta, r_change_1, angle_change)
+                radii_2 = self.straight_line_math(starting_r_2, starting_theta, r_change_2, angle_change)
 
-                 for r in radii_1:  #This may be taking a lot of time...so look into
+                for r in radii_1:  #This may be taking a lot of time...so look into
                     if r > 0 or r < self.outside_position:
                         print(str(r))
                         return
                     
-                 for r in radii_2:  #This may be taking a lot of time...so look into
+                for r in radii_2:  #This may be taking a lot of time...so look into
                     if r > 0 or r < self.outside_position:
                         print(str(r))
                         return
@@ -431,15 +438,16 @@ class motor_setup:
                 self.zeus.set_pos(radii_1[0])
                 self.odin.set_pos(radii_2[0])
 
-                 for r in range(len(radii_1)):
+                
+                for r in range(len(radii_1)):
                      self.zeus.set_pos_no_loop(radii_1[r])
                      self.odin.set_pos_no_loop(raddi_2[r])
 
  
-                    while time() < mark + self.straight_line_radius_time:
+                     while time() < mark + self.straight_line_radius_time:
                         pass
                     
-                    mark = time()
+                     mark = time()
                 i += 1
                 
         

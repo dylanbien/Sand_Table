@@ -9,7 +9,7 @@
             font_size: 130
             size: root.width * 0.85, root.height * 0.95
             x: root.width * 0.47
-            y: root.height * 0.15
+            y: root.height * 0.1
             
 
         Label:
@@ -32,6 +32,7 @@
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('inward spiral')
+            on_press: self.backgound_color = 0,0,0,1
 
         Button:
             size_hint: None,None
@@ -42,7 +43,8 @@
             text: 'Outward\nSpiral'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
+            on_release: root.run('outward spiral')
+            on_press: self.backgound_color = 0,0,0,1
 
         Button:
             size_hint: None,None
@@ -53,7 +55,8 @@
             text: 'Overlapping\nTriangle'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
+            on_release: root.run('overlapping triangle')
+            on_press: self.backgound_color = 0,0,0,1
 
         Button:
             size_hint: None,None
@@ -64,7 +67,8 @@
             text: 'Overlapping\nPentagon'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
+            on_release: root.run('overlapping pentagon')
+            on_press: self.backgound_color = 0,0,0,1
 
 
 	#row 2
@@ -78,7 +82,8 @@
             text: 'Inward\nTriangle'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
+            on_release: root.run('inward triangle')
+            on_press: self.backgound_color = 0,0,0,1
 
         Button:
             size_hint: None,None
@@ -89,7 +94,8 @@
             text: 'Outward\nTriangle'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
+            on_release: root.run('outward traingle')
+            on_press: self.backgound_color = 0,0,0,1
 
         Button:
             size_hint: None,None
@@ -101,6 +107,7 @@
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
             on_release: root.run('shape')
+            on_press: self.backgound_color = 0,0,0,1
 
         Button:
             size_hint: None,None
@@ -111,7 +118,8 @@
             text: 'Outward\nSquare'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
+            on_release: root.run('outward square')
+            on_press: self.backgound_color = 0,0,0,1
 
 
 
@@ -126,7 +134,8 @@
             text: 'Outward\nHexagon'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
+            on_release: root.run('outward hexagon')
+            on_press: self.backgound_color = 0,0,0,1
 
         Button:
             size_hint: None,None
@@ -137,7 +146,8 @@
             text: 'Inward\nHexagon'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
+            on_release: root.run('inward hexagon')
+            on_press: self.backgound_color = 0,0,0,1
 
 
         Button:
@@ -149,7 +159,8 @@
             text: 'Sinusoidal'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
+            on_release: root.run('sinusoidal')
+            on_press: self.backgound_color = 0,0,0,1
 
         Button:
             size_hint: None,None
@@ -160,6 +171,7 @@
             text: 'Flower'
             background_normal: ''
             background_color: 0.6, 0.6, 1.0, 1.0
-            on_release: root.run('shape')
+            on_release: root.run('flower')
+            on_press: self.backgound_color = 0,0,0,1
 
 
