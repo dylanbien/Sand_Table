@@ -55,6 +55,7 @@ class MainScreen(Screen):
         print('hi')
 
     def run(self, str):
+        self.disable_buttons()
         sm.get_screen('mainscreen').ids.Status.text='Making Design: ' + str
         if str == 'inward spiral':
             pass
@@ -83,6 +84,7 @@ class MainScreen(Screen):
             Clock.schedule_once(lambda _: motors.flower(-100000, 5), 0)
             
         Clock.schedule_once(lambda _: self.reset_screen, 0)
+        Clock.schedule_once(lambda _: self.enable_buttons, 0)
 
     def reset_screen(self):
         sm.get_screen('mainscreen').ids.Status.text='Status: Ready'
