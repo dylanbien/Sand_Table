@@ -53,41 +53,42 @@ Builder.load_file('sand_table.kv')
 class MainScreen(Screen):
     def next(self):
         print('hi')
-
-    def run(self, str):
+    def run(self,str):
         self.disable_buttons()
         sm.get_screen('mainscreen').ids.Status.text='Making Design: ' + str
+        Clock.schedule_once(lambda _: self.move_motors(str), 0)
+        
+    def move_motors(self, str):
+        
         if str == 'inward spiral':
             pass
-            #Clock.schedule_once(lambda _: motors.spiral('in'), 0)
+            #motors.spiral('in')
         if str == 'outward spiral':
-            Clock.schedule_once(lambda _: motors.spiral('out'), 0)
+            motors.spiral('out')
         if str == 'overlapping triangle':
-            Clock.schedule_once(lambda _: motors.make_shape_same('outward',3, False), 0)
+            motors.make_shape_same('outward',3, False)
         if str == 'overlapping pentagon':
-            Clock.schedule_once(lambda _: motors.make_shape_same('outward', 5), 0)
+            motors.make_shape_same('outward', 5)
         if str == 'inward triangle':
-            Clock.schedule_once(lambda _: motors.make_shape_same('inward', 3), 0)
+            motors.make_shape_same('inward', 3)
         if str == 'outward triangle':
-            Clock.schedule_once(lambda _: motors.make_shape_same('outward', 3), 0)
+            motors.make_shape_same('outward', 3)
         if str == 'inward square':
-            Clock.schedule_once(lambda _: motors.make_shape_same('inward', 4), 0)
+            motors.make_shape_same('inward', 4)
         if str == 'outward square':
-            Clock.schedule_once(lambda _: motors.make_shape_same('outward', 4), 0)
+            motors.make_shape_same('outward', 4)
         if str == 'outward hexagon':
-            Clock.schedule_once(lambda _: motors.make_shape_same('outward', 6), 0)
+            motors.make_shape_same('outward', 6)
         if str == 'inward hexagon':
-            Clock.schedule_once(lambda _: motors.make_shape_same('inward', 6), 0)
+            motors.make_shape_same('inward', 6)
         if str == 'sinusoidal':
-            Clock.schedule_once(lambda _: motors.sinusoidal(-100000, 'out'), 0)
+            motors.sinusoidal(-100000, 'out')
         if str == 'flower':
-            Clock.schedule_once(lambda _: motors.flower(-100000, 5), 0)
+            motors.flower(-100000, 5)
             
-        Clock.schedule_once(lambda _: self.reset_screen, 0)
-        Clock.schedule_once(lambda _: self.enable_buttons, 0)
-
-    def reset_screen(self):
         sm.get_screen('mainscreen').ids.Status.text='Status: Ready'
+        self.enable_buttons()
+        
         
     def disable_buttons(self):
         self.ids.button1.disabled = True
