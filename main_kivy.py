@@ -23,7 +23,7 @@ from kivy.clock import Clock
 from kivy.graphics import *
 from time import sleep
 import motor_setup
-'''
+
 import Adafruit_Ease_Lib_Sand_Table
 
 leds = Adafruit_Ease_Lib_Sand_Table.Adafruit_Ease_Lib()
@@ -34,7 +34,8 @@ from threading import Thread
 t = Thread(target = leds.run_lights)
 t.start()
 #disable touch
-'''
+
+
 motors = motor_setup.motor_setup()
 sleep(1)
 motors.prepare_table()
@@ -49,38 +50,42 @@ class MyApp(App):
 #Load all the KV Files
 Builder.load_file('sand_table.kv')
 
-
+ready =True
 class MainScreen(Screen):
     def next(self):
         print('hi')
     def run(self,str):
+        global ready
+        if ready == False:
+            return
+        else:
+            ready = False
         self.disable_buttons()
         sm.get_screen('mainscreen').ids.Status.text='Making Design: ' + str
         Clock.schedule_once(lambda _: self.move_motors(str), 0)
         
     def move_motors(self, str):
-        
+        global ready
         if str == 'inward spiral':
-            pass
-            #motors.spiral('in')
+            motors.spiral('in')
         if str == 'outward spiral':
             motors.spiral('out')
         if str == 'overlapping triangle':
-            motors.make_shape_same('outward',3, False)
+            motors.make_shape('outward', 3)
         if str == 'overlapping pentagon':
-            motors.make_shape_same('outward', 5)
-        if str == 'inward triangle':
-            motors.make_shape_same('inward', 3)
+            motors.make_shape('outward', 5)
+        if str == 'test':
+            motors.set_radius('middle')
         if str == 'outward triangle':
-            motors.make_shape_same('outward', 3)
+            motors.make_shape('outward', 3)
         if str == 'inward square':
-            motors.make_shape_same('inward', 4)
+            motors.make_shape('inward', 4)
         if str == 'outward square':
-            motors.make_shape_same('outward', 4)
+            motors.make_shape('outward', 4)
         if str == 'outward hexagon':
-            motors.make_shape_same('outward', 6)
+            motors.make_shape('outward', 6)
         if str == 'inward hexagon':
-            motors.make_shape_same('inward', 6)
+            motors.make_shape('inward', 6)
         if str == 'sinusoidal':
             motors.sinusoidal(-100000, 'out')
         if str == 'flower':
@@ -88,6 +93,8 @@ class MainScreen(Screen):
             
         sm.get_screen('mainscreen').ids.Status.text='Status: Ready'
         self.enable_buttons()
+        ready = True
+    
         
         
     def disable_buttons(self):

@@ -31,10 +31,12 @@ class motor_setup:
 
         dev = usb.core.find(find_all=1, idVendor=0x1209, idProduct=0x0d32)
         od = []
-
+        
         a = next(dev)
         od.append(odrive.find_any('usb:%s:%s' % (a.bus, a.address)))
         print('connected 1')
+        print('waiting')
+        sleep(2)
         a = next(dev)
         od.append(odrive.find_any('usb:%s:%s' % (a.bus, a.address)))
         print('connected 2')
@@ -49,6 +51,9 @@ class motor_setup:
 
         self.odin = ODrive_Ease_Lib.ODrive_Axis(self.radius_odrive.axis0, 100000)
         self.zeus = ODrive_Ease_Lib.ODrive_Axis(self.radius_odrive.axis1, 100000)
+        
+        self.radius_odrive.axis0.controller.config.vel_limit_tolerance = 0
+        self.radius_odrive.axis1.controller.config.vel_limit_tolerance = 0 
 
         self.theta_motor = ODrive_Ease_Lib.ODrive_Axis(self.theta_odrive.axis0, 200000)
 
@@ -89,12 +94,12 @@ class motor_setup:
         
         print('getting motors ready')
         
-        self.odin.home_with_vel(-25000)
+        self.odin.home_with_vel(-30000)
         self.odin.set_pos(-190000)
         while self.odin.is_busy() == True:
             pass
         
-        self.zeus.home_with_vel(-25000)
+        self.zeus.home_with_vel(-30000)
         self.zeus.set_pos(-190000)
         while self.zeus.is_busy() == True:
             pass
@@ -243,7 +248,9 @@ class motor_setup:
         petal_height = 20
 
         velocity = (self.odin.get_pos() + petal_height) / half_a_petal_period
-        while(self.odin.get_pos() < self.inside_position):
+        t = time()
+        
+        while(time() <= (t+self.theta_period)):
             for count in range(sides+1):
                 self.odin.set_vel(velocity)
                 sleep(half_a_petal_period)
@@ -256,7 +263,7 @@ class motor_setup:
 #//                     Shapes                        //
 #///////////////////////////////////////////////////////
 
-    def make_shape_same(self, dir, sides, both = True):
+    def make_shape(self, dir, sides):
         
         #angle informaton
         angle_change = 360 / sides #used in move in straight line call
@@ -265,10 +272,10 @@ class motor_setup:
 
         if dir == 'outward':
             self.set_radius('inside')
-            r_change = -1 * (12000.0 / sides)
+            r_change = -1 * (8000.0 / sides)
         elif dir == 'inward':
             self.set_radius('outside')
-            r_change = (12000.0 / sides)
+            r_change = (8000.0 / sides)
 
         while True:
             
@@ -287,82 +294,26 @@ class motor_setup:
                         return
 
                 self.zeus.set_pos(radii[0])
-                if both == True:
-                    self.odin.set_pos(radii[0])
+                self.odin.set_pos(radii[0])
                     
                 mark = time()
                 
                 for r in radii:
                      
-                     self.zeus.set_pos_no_loop(r)
-                     if both == True:
-                         self.odin.set_pos_no_loop(r)
+                    self.zeus.set_pos_no_loop(r)
+                    self.odin.set_pos_no_loop(r)
+          
+                     #print((mark + self.straight_line_radius_time) - time())
 
-                                
-                    print((mark + straight_line_radius_time) - time())
-
-                     while time() < mark + self.straight_line_radius_time:
+                    while time() < mark + self.straight_line_radius_time:
                         pass
          
-                    
-                     mark = time()
+                    mark = time()
                      
                
                 i += 1
                 
-            while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
-                    pass
-
-    def make_shape_opposite(self, sides):
-        
-        #angle informaton
-        angle_change = 360 / sides #used in move in straight line call
-        
-        starting_theta = 0
-        self.set_radius('opposite')
-        r_change_1 = -1 * (12000.0 / sides)
-        r_change_2 = (12000.0 / sides)
-        
-        while True:
-            
-            i = 0
-            while(i<sides):
-                
-                mark = time()  #Where should this be???
-                
-                starting_r_1 = self.zeus.get_pos()
-                starting_r_2 = self.odin.get_pos()
-                
-
-                radii_1 = self.straight_line_math(starting_r_1, starting_theta, r_change_1, angle_change)
-                radii_2 = self.straight_line_math(starting_r_2, starting_theta, r_change_2, angle_change)
-
-                for r in radii_1:  #This may be taking a lot of time...so look into
-                    if r > 0 or r < self.outside_position:
-                        print(str(r))
-                        return
-                    
-                for r in radii_2:  #This may be taking a lot of time...so look into
-                    if r > 0 or r < self.outside_position:
-                        print(str(r))
-                        return
-
-                self.zeus.set_pos(radii_1[0])
-                self.odin.set_pos(radii_2[0])
-
-                
-                for r in range(len(radii_1)):
-                     self.zeus.set_pos_no_loop(radii_1[r])
-                     self.odin.set_pos_no_loop(raddi_2[r])
-
- 
-                     while time() < mark + self.straight_line_radius_time:
-                        pass
-                    
-                     mark = time()
-                i += 1
-                
-        
+                   
     def cart2pol(self, x, y):
         rho = np.sqrt(x**2 + y**2)
         phi = np.arctan2(y, x)
@@ -411,6 +362,8 @@ class motor_setup:
     def set_radius(self, location, motors = 'both'):
         
         print('motors: ' + motors + ', location: ' + str(location))
+        self.odin.set_vel_limit(20000)
+        self.zeus.set_vel_limit(20000)
         
         if motors == 'both':
             if location == "outside":
@@ -492,3 +445,5 @@ class motor_setup:
                     self.zeus.set_pos(location)
                     while (self.zeus.is_busy() == True):
                            pass
+        self.odin.set_vel_limit(100000)
+        self.zeus.set_vel_limit(100000)
