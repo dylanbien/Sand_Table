@@ -56,16 +56,24 @@ class motor_setup:
         self.radius_odrive.axis1.controller.config.vel_limit_tolerance = 0 
 
         self.theta_motor = ODrive_Ease_Lib.ODrive_Axis(self.theta_odrive.axis0, 200000)
+        
+        
+        self.odin.set_calibration_current(20)
+        self.zeus.set_calibration_current(20)
+        
+        self.odin.set_curr_limit(20)
+        self.zeus.set_curr_limit(20)
+        
+        
+
 
         print('assigned axises')
         
     def prepare_table(self):
       
-        self.calibrate_theta()
+        self.calibrate_all()
         sleep(1)
         self.start_theta()
-        sleep(1)
-        self.calibrate_radius()
         sleep(1)
         self.set_up_radius()
        
@@ -80,29 +88,25 @@ class motor_setup:
         
     def calibrate_theta(self):
         print('calibrating theta')
-        self.theta_motor.encoder_calibrate()
-        self.theta_motor.set_curr_limit(13)
+        self.theta_motor.calibrate_encoder()
         print('theta calibration completed')
         
     def calibrate_radius(self):
         print('calibrating radii')
-        self.odin.encoder_calibrate()
-        self.zeus.encoder_calibrate()
+        self.odin.calibrate_encoder()
+        self.zeus.calibrate_encoder()
         print('radii calibration completed')
+        
+    def calibrate_all(self):
+        ODrive_Ease_Lib.calibrate_list( [ self.odin, self. zeus, self.theta_motor] )
         
     def set_up_radius(self):
         
         print('getting motors ready')
         
         self.odin.home_with_vel(-30000)
-        self.odin.set_pos(-190000)
-        while self.odin.is_busy() == True:
-            pass
-        
         self.zeus.home_with_vel(-30000)
-        self.zeus.set_pos(-190000)
-        while self.zeus.is_busy() == True:
-            pass
+        self.set_radius('outside')
         
         print('motors ready')
 
@@ -237,8 +241,7 @@ class motor_setup:
     
     
     def flower(self, starting, sides):
-        self.zeus.set_pos(starting)
-        self.odin.set_pos(starting)
+        self.set_radius(starting)
         while (self.zeus.is_busy() == True and self.odin.is_busy() == True):
                     pass
         angle_change = 360 / sides
@@ -250,7 +253,7 @@ class motor_setup:
         velocity = (self.odin.get_pos() + petal_height) / half_a_petal_period
         t = time()
         
-        while(time() <= (t+self.theta_period)):
+        while(time() < (t+self.theta_period-1)):
             for count in range(sides+1):
                 self.odin.set_vel(velocity)
                 sleep(half_a_petal_period)
@@ -258,7 +261,7 @@ class motor_setup:
                 sleep(half_a_petal_period)
                 self.odin.set_vel(0)
             self.odin.set_pos(self.odin.get_pos()+(petal_height / 2))
-            
+        self.set_radius(starting)
 #///////////////////////////////////////////////////////
 #//                     Shapes                        //
 #///////////////////////////////////////////////////////
@@ -271,11 +274,11 @@ class motor_setup:
         starting_theta = 0
 
         if dir == 'outward':
-            self.set_radius('inside')
-            r_change = -1 * (8000.0 / sides)
+            self.set_radius(-50000)
+            r_change = -1 * (3000.0 / sides)
         elif dir == 'inward':
             self.set_radius('outside')
-            r_change = (8000.0 / sides)
+            r_change = (3000.0 / sides)
 
         while True:
             
