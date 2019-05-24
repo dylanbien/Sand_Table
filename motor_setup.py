@@ -292,7 +292,7 @@ class motor_setup:
                 radii = self.straight_line_math(starting_r, starting_theta, r_change, angle_change)
 
                 for r in radii:
-                    if r > 0 or r < self.outside_position:
+                    if r > self.inside_position or r < self.outside_position:  #may need to cahnge inside position variable to some arbitary amount
                         print(str(r))
                         return
 
