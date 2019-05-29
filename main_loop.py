@@ -27,7 +27,7 @@ def set_one():
     
 def set_two():
     print('2')
-    motors.make_shape('outward',3)
+    motors.make_shape('inward',3)
     motors.flower(-80000,9)
     motors.flower(-80000,3)
     motors.flower(-80000,11)
@@ -45,7 +45,7 @@ def set_three():
 
 def set_four():
     print('4')
-    motors.make_shape('outward',8)
+    motors.make_shape('inward',8)
     motors.flower(-80000,9)
     motors.flower(-80000,3)
     motors.flower(-80000,11)

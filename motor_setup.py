@@ -14,7 +14,7 @@ class motor_setup:
     seconds_per_degree = (theta_period / 360)
     straight_line_radius_time = (seconds_per_degree) * increments       
     
-    outside_position = -190000
+    outside_position = -195000
     inside_position = -5000
 
     
@@ -79,7 +79,7 @@ class motor_setup:
        
     def set_inc(self,inc):
         self.increments = inc
-        self.straight_line_radius_time = (slef.seconds_per_degree) * self.increments
+        self.straight_line_radius_time = (self.seconds_per_degree) * self.increments
             
 #///////////////////////////////////////////////////////
 #//                     Calibration                  //
@@ -134,12 +134,12 @@ class motor_setup:
         if dir == 'out':
             self.set_radius('inside')
             print('radius set')
-            self.move_slowly_vel(self.outside_position, -250)
+            self.move_slowly_vel(self.outside_position, -175)
             print('swirl completed')
         elif dir == 'in':
             self.set_radius('outside')
             print('radius set')
-            self.move_slowly_vel(self.inside_position, 250)
+            self.move_slowly_vel(self.inside_position, 175)
             print('swirl completed')
             
     def move_slowly_vel(self, end_point, velocity, dt = 0.01):
@@ -280,6 +280,9 @@ class motor_setup:
             self.set_radius('outside')
             r_change = (3000.0 / sides)
 
+        if sides % 2 == 0:
+            r_change = r_change / 2.
+            
         while True:
             
             i = 0
@@ -290,11 +293,15 @@ class motor_setup:
                 starting_r = self.zeus.get_pos()
 
                 radii = self.straight_line_math(starting_r, starting_theta, r_change, angle_change)
+                print(r_change)
+                print(radii[0])
+                print(radii[len(radii)-1])
+                
 
-                for r in radii:
-                    if r > self.inside_position or r < self.outside_position:  #may need to cahnge inside position variable to some arbitary amount
-                        print(str(r))
-                        return
+                inner_r = radii[ int(len(radii) / 2.0 )]
+                if inner_r > -20000.0 or inner_r < self.outside_position:  #may need to cahnge inside position variable to some arbitary amount
+                    print(str(r))
+                    return
 
                 self.zeus.set_pos(radii[0])
                 self.odin.set_pos(radii[0])
@@ -314,6 +321,7 @@ class motor_setup:
                     mark = time()
                      
                
+                
                 i += 1
                 
                    

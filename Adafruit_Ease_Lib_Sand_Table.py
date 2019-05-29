@@ -12,12 +12,12 @@ current_color = [0, 0, 0]
 next_color = [0, 0, 0]
     
 color_options = [
-      [10,40,20],
-      [10,40,0],
-      [20,0,60],
-      [80,10,0],
+      [216,158,229],
+      [50,40,0],
+      [20,50,60],
+      [80,30,70],
       [60,0,20],
-      [60,50,20]
+      [216,196,17]
    ]
 class Adafruit_Ease_Lib():
 
@@ -125,9 +125,9 @@ class Adafruit_Ease_Lib():
         #print(current_color)
         for i in range (3):
             if (next_color[i] - current_color[i] > 0):
-                change.append(.1)
+                change.append(1)
             elif (next_color[i] - current_color[i] < 0):
-                change.append(-.1)
+                change.append(-1)
             else:
                 change.append(0)
         #print(change)
@@ -167,7 +167,7 @@ class Adafruit_Ease_Lib():
             choice = random.randint(0,len(color_options)-1)
             temp = color_options[choice]
             self.transition_color(temp[0], temp[1], temp[2])
-            sleep(2)
+            sleep(3)
             #print('done')
            
             
