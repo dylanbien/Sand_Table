@@ -9,4 +9,4 @@ Second to the run this new code.
 Below is the link to what needs to be don,
 Inlcuding programming 
 
-https://docs.google.com/document/d/1kvhda0ITTTb9xH6czlofwAFuT6PMDbpZo_uKxWNithM/edit 
+https://docs.google.com/document/d/1kvhda0ITTTb9xH6czlofwAFuT6PMDbpZo_uKxWNithM/edit?usp=sharing
