@@ -1,12 +1,11 @@
 # ConferenceSandTable
 
-This is the code for the new conference room sand table. 
-Main.py automatically runs when the project is plugged in
-If you need to get the ball or run a different code, you must run it twice
-First to interupt the current, automatic thread
-Second to the run this new code.
+The intention of the project is to serve as a conference table for companies to hold meetings on!
 
-Below is the link to what needs to be don,
-Inlcuding programming 
+When plugged in, the lights turn on, fading in and out through different colors
+Simultaneously, a gear train underneath begins to rotate circularly
+Connected to this are magnets that can move in and out
 
-https://docs.google.com/document/d/1kvhda0ITTTb9xH6czlofwAFuT6PMDbpZo_uKxWNithM/edit?usp=sharing
+Users see a ball being pulled by the magent through the sand and has been programmed to draw designs.
+
+The designs include spirals as well as shapes (where an alogrithm was written to convert our polar corrdianate system into cartesian) 
